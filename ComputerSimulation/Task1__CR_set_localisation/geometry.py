@@ -72,7 +72,14 @@ class Compact:
         return self._cell_index_to_number(cell_index)
 
     def _cell_index_to_number(self, index: np.ndarray) -> int:
-        return (index * self._index_to_number_multiplier).sum() + 1
+        # number = index[0]
+        # multiplier = 1
+        # for i in range(1, index.size):
+        #     multiplier *= self._split_counts[i - 1]
+        #     number += multiplier * index[i]
+        #
+        # return number + 1
+        return np.dot(index, self._index_to_number_multiplier) + 1
 
 
 class Homeomorphism:
@@ -86,3 +93,4 @@ class QuadraticMapping(Homeomorphism):
 
     def apply(self, x: complex):
         return x * x + self._C
+
