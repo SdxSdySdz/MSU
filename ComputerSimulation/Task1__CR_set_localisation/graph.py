@@ -1,23 +1,15 @@
 from collections import defaultdict
-from typing import List
-from geometry import Homeomorphism, Compact
-
-
-class Vertex:
-    ...
+from typing import List, Set
+from geometry import Homeomorphism, Compact, Domain, Cell
 
 
 class SymbolicImageGraph:
-    def __init__(self, f: Homeomorphism, compact: Compact):
-        self._vertexes = defaultdict(list)
+    def __init__(self, f: Homeomorphism, domain: Domain):
+        self._vertexes = defaultdict(set)
 
-        for cell in compact.get_cells():
-            f_neighbours = self._find_f_neighbours()
-            
-            self._vertexes[vertex].append()
+        for cell in domain.get_cells():
+            X = f.apply_to_cell(cell)
 
-    def _consist(self, vertex: Vertex) -> bool:
-        pass
+            cells = domain.get_cells(X)
 
-    def _find_f_neighbours(self) -> List[Vertex]:
-        ...
+            self._vertexes[cell] = {cell for cell in cells}

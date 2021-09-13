@@ -27,7 +27,55 @@ class Segment:
     def length(self):
         return self._length
 
-    
+
+class Cell:
+    def __init__(self, segments: List[Segment]):
+        self._dim = len(segments)
+        self._low_point = np.zeros(self._dim, dtype=float)
+        self._high_point = np.zeros(self._dim, dtype=float)
+        # self._center = np.zeros(self._dim, dtype=float)
+
+        self._segments = []
+
+        for i in range(self._dim):
+            segment = segments[i]
+
+            if not isinstance(segment, Segment):
+                raise Exception("Parameter segments should consist only elements of type Segment")
+
+            self._low_point[i] = segment.low
+            self._high_point[i] = segment.high
+            # self._center[i] = (segment.low + segment.high) / 2.0
+            self._segments.append(segment)
+
+    def __eq__(self, other):
+        # return np.array_equal(self._center, other._center)
+        return np.array_equal(self._low_point, other._low_point) and np.array_equal(self._high_point, other._high_point)
+
+    def __hash__(self):
+        # return self._center.__hash__()
+        return (self._low_point, self._high_point).__hash__()
+
+    @property
+    def dim(self):
+        return self._dim
+
+    def get_segment(self, index) -> Segment:
+        return self._segments[index]
+
+
+class Domain:
+    def __init__(self):
+        ...
+
+
+
+
+
+
+
+
+
 class Compact:
     def __init__(self, segments: List[Segment], split_counts: List[int]):
         self._dim = len(segments)
@@ -72,13 +120,6 @@ class Compact:
         return self._cell_index_to_number(cell_index)
 
     def _cell_index_to_number(self, index: np.ndarray) -> int:
-        # number = index[0]
-        # multiplier = 1
-        # for i in range(1, index.size):
-        #     multiplier *= self._split_counts[i - 1]
-        #     number += multiplier * index[i]
-        #
-        # return number + 1
         return np.dot(index, self._index_to_number_multiplier) + 1
 
 
