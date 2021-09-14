@@ -4,7 +4,7 @@ import numpy as np
 
 
 class Cell:
-    def __init__(self, low, high, id):
+    def __init__(self, low: np.ndarray, high: np.ndarray, id: int):
         self._low = low
         self._high = high
         self._id = id
@@ -20,6 +20,14 @@ class Cell:
     def id(self):
         return self._id
 
+    @property
+    def low(self):
+        return self._low
+
+    @property
+    def high(self):
+        return self._high
+
     def sample_points(self, points_count) -> np.ndarray:
         x_splitting = np.linspace(self._low[0], self._high[0], num=points_count + 2, endpoint=True)
         y_splitting = np.linspace(self._low[1], self._high[1], num=points_count + 2, endpoint=True)
@@ -32,7 +40,7 @@ class Cell:
 
 
 class Domain:
-    def __init__(self, low_point, high_point, row_count: int, column_count: int):
+    def __init__(self, low_point: np.ndarray, high_point: np.ndarray, row_count: int, column_count: int, fill_grid=True):
         self._low_point = low_point
         self._high_point = high_point
 
@@ -44,15 +52,24 @@ class Domain:
 
         self._grid = dict()
 
-        for row in range(row_count):
-            for column in range(column_count):
-                low_point = (column * self._column_splitting, row * self._row_splitting)
-                high_point = ((column + 1) * self._column_splitting, (row + 1) * self._row_splitting)
+        if fill_grid:
+            id = 0
 
-                index = np.array([row, column], dtype=int)
-                id = column + column_count * row
+            for row in range(row_count):
+                for column in range(column_count):
+                    low_point = np.array(
+                        (column * self._column_splitting, row * self._row_splitting)
+                    )
+                    high_point = np.array(
+                        ((column + 1) * self._column_splitting, (row + 1) * self._row_splitting)
+                    )
 
-                self._grid[index] = Cell(low_point, high_point, id=id)
+                    index = np.array([row, column], dtype=int)
+
+                    # id = column + column_count * row
+
+                    self._grid[index] = Cell(low_point, high_point, id=id)
+                    id += 1
     
     @property
     def cell_size(self):
@@ -66,6 +83,54 @@ class Domain:
         candidates = [self._grid.get(index, None) for index in indices]
 
         return [candidate for candidate in candidates if candidate is not None]
+
+    def split(self):
+        new_domain = Domain(fill_grid=False)
+
+        id = 0
+        for (cell_index, cell) in self._grid.items():
+            low = cell.low
+            high = cell.high
+            center = (high + low) / 2.0
+            half_diff = (high - low) / 2.0
+
+            top_left_low = np.array([low[0], center[1]])
+            top_right_low = np.array([center[0], center[1]])
+            bottom_left_low = low[:]
+            bottom_right_low = np.array([center[0], low[1]])
+
+            # top_left_id = id
+            # top_right_id = id + 1
+            # bottom_left_id = id + 2
+            # bottom_right_id = id + 3
+
+            # id += 4
+
+            # top_left = Cell(low=top_left_low, high=top_left_low + half_diff, id=top_left_id)
+            # top_right = Cell(low=top_right_low, high=top_right_low + half_diff, id=top_right_id)
+            # bottom_left = Cell(low=bottom_left_low, high=bottom_left_low + half_diff, id=bottom_left_id)
+            # bottom_right = Cell(low=bottom_right_low, high=bottom_right_low + half_diff, id=bottom_right_id)
+
+            childs = []
+            for child_low in [top_left_low, top_right_low, bottom_left_low, bottom_right_low]:
+                childs.append(Cell(low=child_low, high=child_low + half_diff, id=id))
+                id += 1
+
+            row = cell_index[0]
+            column = cell_index[1]
+
+            top_left_index = 2 * cell_index
+            top_right_index = np.array([2 * row, 2 * column + 1])
+            bottom_left_index = np.array([2 * row + 1, 2 * column])
+            bottom_right_index = 2 * cell + 1
+
+            top_left, top_right, bottom_left, bottom_right = childs
+
+            new_domain._grid[top_left_index] = top_left
+            new_domain._grid[top_right_index] = top_right
+            new_domain._grid[bottom_left_index] = bottom_left
+            new_domain._grid[bottom_right_index] = bottom_right
+
 
     def _get_indices(self, X: np.ndarray) -> np.ndarray:
         X -= np.array(self._low_point)
