@@ -63,16 +63,30 @@ class Domain:
         return X.astype(int)
 
 
-
 class Homeomorphism:
     def apply(self, x):
         raise NotImplementedError()
 
 
 class QuadraticMapping(Homeomorphism):
-    def __init__(self, C: complex):
-        self._C = C
+    def __init__(self, a: float, b: float):
+        self._a = a
+        self._b = b
 
-    def apply(self, x: complex):
-        return x * x + self._C
+    def _apply(self, x: np.ndarray):
+        x_ = x[0]
+        y_ = x[1]
 
+        x[0] = x_**2 - y_**2 + self._a
+        x[1] = 2 * x_ * y_ + self._b
+
+        return x
+
+    def apply(self, X: np.ndarray) -> np.ndarray:
+        x_ = X[0]
+        y_ = X[1]
+
+        X[0] = x_ ** 2 - y_ ** 2 + self._a
+        X[1] = 2 * x_ * y_ + self._b
+
+        return X
