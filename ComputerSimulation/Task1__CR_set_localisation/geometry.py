@@ -4,23 +4,29 @@ import numpy as np
 
 
 class Cell:
-    def __init__(self, low, high):
+    def __init__(self, low, high, id):
         self._low = low
         self._high = high
+        self._id = id
 
     def __eq__(self, other):
         return self._low == other._low and self._high == other._high
 
     def __hash__(self):
-        return (self._low, self._high).__hash__()
+        # return (self._low, self._high).__hash__()
+        return hash(self._id)
+
+    @property
+    def id(self):
+        return self._id
 
     def sample_points(self, points_count) -> np.ndarray:
-        x_splitting = np.linspace(self._low[0], self._high[0], num=points_count + 1, endpoint=False)
-        y_splitting = np.linspace(self._low[1], self._high[1], num=points_count + 1, endpoint=False)
+        x_splitting = np.linspace(self._low[0], self._high[0], num=points_count + 2, endpoint=True)
+        y_splitting = np.linspace(self._low[1], self._high[1], num=points_count + 2, endpoint=True)
 
         points = np.zeros((points_count, 2))
-        points[:, 0] = x_splitting[1:]
-        points[:, 1] = y_splitting[1:]
+        points[:, 0] = x_splitting[1:-1]
+        points[:, 1] = y_splitting[1:-1]
 
         return points
 
@@ -44,19 +50,20 @@ class Domain:
                 high_point = ((column + 1) * self._column_splitting, (row + 1) * self._row_splitting)
 
                 index = np.array([row, column], dtype=int)
+                id = column + column_count * row
 
-                self._grid[index] = Cell(low_point, high_point)
+                self._grid[index] = Cell(low_point, high_point, id=id)
     
     @property
     def cell_size(self):
         return ...
 
-    def get_cells_from_points(self, X: np.ndarray) -> list:
+    def get_cells_from_points(self, X: np.ndarray) -> List[Cell]:
         indices = self._get_indices(X)
 
         return [self._grid[index] for index in indices]
 
-    def _get_indices(self, X: np.ndarray):
+    def _get_indices(self, X: np.ndarray) -> np.ndarray:
         X -= np.array([self._low_point])
         X /= np.array([self._column_count, self._row_count], dtype=float)
 

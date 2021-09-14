@@ -12,5 +12,5 @@ class SymbolicImageGraph:
             cell_image = f.apply(cell)
             image_cells = domain.get_cells_from_points(cell_image)
 
-            self._graph.add_nodes_from()
+            self._graph.add_nodes_from(image_cell._id for image_cell in image_cells)
 
