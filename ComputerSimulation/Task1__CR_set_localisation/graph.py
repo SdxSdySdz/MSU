@@ -14,3 +14,12 @@ class SymbolicImageGraph:
 
             self._graph.add_node(cell_id)
             self._graph.add_edges_from((cell_id, image_cell.id) for image_cell in image_cells)
+
+    def delete_nonreturnable_vertexes(self):
+        strongly_connected_components = nx.algorithms.strongly_connected_components(self._graph)
+
+        returnable_vertexes = {}
+        for strongly_connected_component in strongly_connected_components:
+            returnable_vertexes += strongly_connected_component
+
+        self._graph = self._graph.subgraph(returnable_vertexes)

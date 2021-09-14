@@ -85,7 +85,13 @@ class Domain:
         return [candidate for candidate in candidates if candidate is not None]
 
     def split(self):
-        new_domain = Domain(fill_grid=False)
+        new_domain = Domain(
+            self._low_point,
+            self._high_point,
+            2 * self._row_count,
+            2 * self._column_count,
+            fill_grid=False
+        )
 
         id = 0
         for (cell_index, cell) in self._grid.items():
@@ -131,6 +137,7 @@ class Domain:
             new_domain._grid[bottom_left_index] = bottom_left
             new_domain._grid[bottom_right_index] = bottom_right
 
+        return new_domain
 
     def _get_indices(self, X: np.ndarray) -> np.ndarray:
         X -= np.array(self._low_point)
