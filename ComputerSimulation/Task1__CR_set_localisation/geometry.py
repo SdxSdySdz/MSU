@@ -1,5 +1,5 @@
 from collections import namedtuple
-from typing import List
+from typing import List, ValuesView
 import numpy as np
 
 
@@ -58,13 +58,17 @@ class Domain:
     def cell_size(self):
         return ...
 
+    def get_cells(self) -> ValuesView[Cell]:
+        return self._grid.values()
+
     def get_cells_from_points(self, X: np.ndarray) -> List[Cell]:
         indices = self._get_indices(X)
+        candidates = [self._grid.get(index, None) for index in indices]
 
-        return [self._grid[index] for index in indices]
+        return [candidate for candidate in candidates if candidate is not None]
 
     def _get_indices(self, X: np.ndarray) -> np.ndarray:
-        X -= np.array([self._low_point])
+        X -= np.array(self._low_point)
         X /= np.array([self._column_count, self._row_count], dtype=float)
 
         return X.astype(int)
