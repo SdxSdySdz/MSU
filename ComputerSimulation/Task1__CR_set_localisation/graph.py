@@ -1,15 +1,16 @@
 from collections import defaultdict
 from typing import List, Set
 from geometry import Homeomorphism, Compact, Domain, Cell
+import networkx as nx
 
 
 class SymbolicImageGraph:
     def __init__(self, f: Homeomorphism, domain: Domain):
-        self._vertexes = defaultdict(set)
+        self._graph = nx.DiGraph()
 
         for cell in domain.get_cells():
-            X = f.apply_to_cell(cell)
+            cell_image = f.apply(cell)
+            image_cells = domain.get_cells_from_points(cell_image)
 
-            cells = domain.get_cells(X)
+            self._graph.add_nodes_from()
 
-            self._vertexes[cell] = {cell for cell in cells}
