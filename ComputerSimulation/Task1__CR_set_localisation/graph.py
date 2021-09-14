@@ -1,6 +1,4 @@
-from collections import defaultdict
-from typing import List, Set
-from geometry import Homeomorphism, Compact, Domain, Cell
+from geometry import Homeomorphism, Domain
 import networkx as nx
 
 
@@ -12,5 +10,7 @@ class SymbolicImageGraph:
             cell_image = f.apply(cell)
             image_cells = domain.get_cells_from_points(cell_image)
 
-            self._graph.add_nodes_from(image_cell._id for image_cell in image_cells)
+            cell_id = cell.id
 
+            self._graph.add_node(cell_id)
+            self._graph.add_edges_from((cell_id, image_cell.id) for image_cell in image_cells)
