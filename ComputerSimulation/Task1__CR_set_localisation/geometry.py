@@ -14,6 +14,16 @@ class Cell:
     def __hash__(self):
         return (self._low, self._high).__hash__()
 
+    def sample_points(self, points_count) -> np.ndarray:
+        x_splitting = np.linspace(self._low[0], self._high[0], num=points_count + 1, endpoint=False)
+        y_splitting = np.linspace(self._low[1], self._high[1], num=points_count + 1, endpoint=False)
+
+        points = np.zeros((points_count, 2))
+        points[:, 0] = x_splitting[1:]
+        points[:, 1] = y_splitting[1:]
+
+        return points
+
 
 class Domain:
     def __init__(self, low_point, high_point, row_count: int, column_count: int):
