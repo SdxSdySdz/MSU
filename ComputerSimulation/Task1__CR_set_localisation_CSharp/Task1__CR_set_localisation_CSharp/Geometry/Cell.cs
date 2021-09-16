@@ -12,6 +12,9 @@ namespace Task1__CR_set_localisation_CSharp.Geometry
 
         public Cell(Vector2 low, Vector2 high)
         {
+            if (low.x >= high.x || low.y >= high.y)
+                throw new Exception("Each component of high point should be > than corresponding low point`s component");
+
             Low = low;
             High = high;
         }
