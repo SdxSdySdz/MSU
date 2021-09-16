@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Task1__CR_set_localisation_CSharp.Geometry.PointsSamplers;
 using Task1__CR_set_localisation_CSharp.LinearAlgebra;
 
 namespace Task1__CR_set_localisation_CSharp.Geometry
