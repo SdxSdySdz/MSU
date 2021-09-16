@@ -20,6 +20,7 @@ namespace Task1__CR_set_localisation_CSharp.LinearAlgebra
         public static Vector2 operator *(Vector2 a, Vector2 b) => new Vector2(b.x * a.x, b.y * a.y);
         public static Vector2 operator *(Vector2 a, double coefficient) => new Vector2(coefficient * a.x, coefficient * a.y);
         public static Vector2 operator *(double coefficient, Vector2 a) => new Vector2(coefficient * a.x, coefficient * a.y);
+        public static Vector2 operator /(Vector2 a, Vector2 b) => new Vector2(a.x / b.x, a.y / b.y);
         public static Vector2 operator /(Vector2 a, double coefficient) => new Vector2(a.x / coefficient, a.y / coefficient);
         
 
