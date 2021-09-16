@@ -1,6 +1,9 @@
 from collections import namedtuple
-from typing import List, ValuesView
+from typing import List, ValuesView, Tuple
 import numpy as np
+
+
+
 
 
 class Cell:
@@ -8,6 +11,7 @@ class Cell:
         self._low = low
         self._high = high
         self._id = id
+        self._center = (low + high) / 2.0
 
     def __eq__(self, other):
         return self._low == other._low and self._high == other._high
@@ -28,13 +32,42 @@ class Cell:
     def high(self):
         return self._high
 
-    def sample_points(self, points_count) -> np.ndarray:
-        x_splitting = np.linspace(self._low[0], self._high[0], num=points_count + 2, endpoint=True)
-        y_splitting = np.linspace(self._low[1], self._high[1], num=points_count + 2, endpoint=True)
+    @property
+    def center(self):
+        return self._center
 
-        points = np.zeros((points_count, 2))
-        points[:, 0] = x_splitting[1:-1]
-        points[:, 1] = y_splitting[1:-1]
+    def sample_points(self, points_count) -> np.ndarray:
+        return CellPointsSampler.uniform(self, n_points_in_row=int(points_count**0.5))
+
+
+class CellPointsSampler:
+    @classmethod
+    def random(cls, cell: Cell, n_points: int):
+        points = np.random.random_sample((n_points, 2))
+
+        points[:, 0] *= cell.high[0] - cell.low[0]
+        points[:, 0] += cell.low[0]
+
+        points[:, 1] *= cell.high[1] - cell.low[1]
+        points[:, 1] += cell.low[1]
+
+        return points
+
+    @classmethod
+    def uniform(cls, cell: Cell, n_points_in_row: int):
+        step = 1.0 / (n_points_in_row - 1)
+        x = np.arange(0.0, 1.0 + step / 2.0, step=step)
+        y = np.arange(0.0, 1.0 + step / 2.0, step=step)
+
+        X, Y = np.meshgrid(x, y)
+
+        grid = np.zeros((n_points_in_row, n_points_in_row, 2))
+        grid[:, :, 0] = X
+        grid[:, :, 1] = Y
+
+        points = grid.reshape((n_points_in_row * n_points_in_row, 2))
+        points *= cell.high - cell.low
+        points += cell.low
 
         return points
 
@@ -64,25 +97,43 @@ class Domain:
                         ((column + 1) * self._column_splitting, (row + 1) * self._row_splitting)
                     )
 
-                    index = np.array([row, column], dtype=int)
+                    low_point += self._low_point
+                    high_point += self._low_point
+
+                    index = (row, column)
 
                     # id = column + column_count * row
 
-                    self._grid[index] = Cell(low_point, high_point, id=id)
+                    self._grid[index] = Cell(low_point, high_point, id=column + self._column_count * row)
                     id += 1
     
     @property
     def cell_size(self):
-        return ...
+        return self._column_splitting, self._row_splitting
 
     def get_cells(self) -> ValuesView[Cell]:
         return self._grid.values()
 
-    def get_cells_from_points(self, X: np.ndarray) -> List[Cell]:
-        indices = self._get_indices(X)
-        candidates = [self._grid.get(index, None) for index in indices]
+    def get_cells_from_points(self, points: np.ndarray) -> List[Cell]:
+        indices = self._get_indices(points)
+        filter()
+        candidates = [self._grid.get((index[0], index[1]), None) for index in indices]
+        # candidates = [self._grid[(index[0], index[1])] for index in indices]
 
         return [candidate for candidate in candidates if candidate is not None]
+
+    def delete_nonreturnable_cells(self, strongly_connected_graph):
+        ids = {cell.id for cell in self.get_cells()}
+        returnable_ids = strongly_connected_graph._graph.nodes
+
+        if not returnable_ids <= ids:
+            raise ValueError
+
+        nonreturnable_ids = ids - returnable_ids
+        for id in nonreturnable_ids:
+            self._delete_cell_by_id(id)
+
+
 
     def split(self):
         new_domain = Domain(
@@ -93,7 +144,6 @@ class Domain:
             fill_grid=False
         )
 
-        id = 0
         for (cell_index, cell) in self._grid.items():
             low = cell.low
             high = cell.high
@@ -117,18 +167,20 @@ class Domain:
             # bottom_left = Cell(low=bottom_left_low, high=bottom_left_low + half_diff, id=bottom_left_id)
             # bottom_right = Cell(low=bottom_right_low, high=bottom_right_low + half_diff, id=bottom_right_id)
 
-            childs = []
-            for child_low in [top_left_low, top_right_low, bottom_left_low, bottom_right_low]:
-                childs.append(Cell(low=child_low, high=child_low + half_diff, id=id))
-                id += 1
-
             row = cell_index[0]
             column = cell_index[1]
+            cell_index = np.array(cell_index)
 
-            top_left_index = 2 * cell_index
-            top_right_index = np.array([2 * row, 2 * column + 1])
-            bottom_left_index = np.array([2 * row + 1, 2 * column])
-            bottom_right_index = 2 * cell + 1
+            top_left_index = tuple(2 * cell_index)
+            top_right_index = (2 * row, 2 * column + 1)
+            bottom_left_index = (2 * row + 1, 2 * column)
+            bottom_right_index = tuple(2 * cell_index + 1)
+
+            childs = []
+            for (child_low, child_index) in [(top_left_low, top_left_index), (top_right_low, top_right_index), (bottom_left_low, bottom_left_index), (bottom_right_low, bottom_right_index)]:
+                child_row = child_index[0]
+                child_col = child_index[1]
+                childs.append(Cell(low=child_low, high=child_low + half_diff, id=child_col + new_domain._column_count * child_row))
 
             top_left, top_right, bottom_left, bottom_right = childs
 
@@ -140,14 +192,48 @@ class Domain:
         return new_domain
 
     def _get_indices(self, X: np.ndarray) -> np.ndarray:
-        X -= np.array(self._low_point)
-        X /= np.array([self._column_count, self._row_count], dtype=float)
+        X_ = np.zeros(X.shape)
 
-        return X.astype(int)
+        X_ += X
+        X_ -= self._low_point
+        X_ /= np.array([self._column_splitting, self._row_splitting], dtype=float)
+
+        return X_.astype(int)[:, ::-1]
+
+    def _id_to_index(self, id: int) -> Tuple[int, int]:
+        row = id // self._column_count
+        column = id - self._column_count * row
+
+        return row, column
+
+    def _index_to_id(self, index: Tuple[int, int]) -> int:
+        row, column = index
+
+        return column + self._column_count * row
+
+    def _delete_cell(self, row, column):
+        del self._grid[row, column]
+
+    def _delete_cell_by_id(self, id):
+        # self._delete_cell(*self._id_to_index(id))
+        for index, cell in self._grid.items():
+            if cell.id == id:
+                del self._grid[index]
+                return
+
+    def _get_cell_by_id(self, id):
+        row, column = self._id_to_index(id)
+
+        return self._grid.get((row, column), None)
 
 
 class Homeomorphism:
-    def apply(self, x):
+    def apply_to_cell(self, cell: Cell):
+        points = cell.sample_points(100)
+
+        return self.apply(points)
+
+    def apply(self, X: np.ndarray) -> np.ndarray:
         raise NotImplementedError()
 
 
@@ -156,20 +242,20 @@ class QuadraticMapping(Homeomorphism):
         self._a = a
         self._b = b
 
-    def _apply(self, x: np.ndarray):
-        x_ = x[0]
-        y_ = x[1]
-
-        x[0] = x_**2 - y_**2 + self._a
-        x[1] = 2 * x_ * y_ + self._b
-
-        return x
-
     def apply(self, X: np.ndarray) -> np.ndarray:
-        x_ = X[0]
-        y_ = X[1]
+        X_ = np.zeros(X.shape)
 
-        X[0] = x_ ** 2 - y_ ** 2 + self._a
-        X[1] = 2 * x_ * y_ + self._b
+        x_ = X[:, 0]
+        y_ = X[:, 1]
 
-        return X
+        X_[:, 0] = x_ ** 2 - y_ ** 2 + self._a
+        X_[:, 1] = 2 * x_ * y_ + self._b
+
+        # for i in range(0, len(X)):
+        #     X_[i, 0] = X[i, 0]**2 - X[i, 1]**2 + self._a
+        #     X_[i, 1] = 2 * X[i, 0] * X[i, 1] + self._b
+        #
+
+        return X_
+
+
