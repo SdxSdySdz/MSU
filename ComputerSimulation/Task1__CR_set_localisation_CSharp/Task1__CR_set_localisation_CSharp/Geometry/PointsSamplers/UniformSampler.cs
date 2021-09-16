@@ -21,7 +21,7 @@ namespace Task1__CR_set_localisation_CSharp.Geometry.PointsSamplers
             int index = 0;
             for (int row = 0; row < _pointsCountInRow; row++)
             {
-                for (int column = 0; column <= _pointsCountInRow; column++)
+                for (int column = 0; column < _pointsCountInRow; column++)
                 {
                     double x = column;
                     double y = row;
@@ -31,7 +31,9 @@ namespace Task1__CR_set_localisation_CSharp.Geometry.PointsSamplers
                     point *= cell.High - cell.Low;
                     point += cell.Low;
 
+                    Console.WriteLine(index);
                     points[index] = point;
+                    index++;
                 }
             }
 
