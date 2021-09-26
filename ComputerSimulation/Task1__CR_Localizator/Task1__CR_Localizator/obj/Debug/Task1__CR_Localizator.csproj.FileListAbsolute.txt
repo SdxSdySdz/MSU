@@ -1,0 +1,10 @@
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task1__CR_Localizator\Task1__CR_Localizator\bin\Debug\Task1__CR_Localizator.exe.config
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task1__CR_Localizator\Task1__CR_Localizator\bin\Debug\Task1__CR_Localizator.exe
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task1__CR_Localizator\Task1__CR_Localizator\bin\Debug\Task1__CR_Localizator.pdb
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task1__CR_Localizator\Task1__CR_Localizator\obj\Debug\Task1__CR_Localizator.csproj.AssemblyReference.cache
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task1__CR_Localizator\Task1__CR_Localizator\obj\Debug\Task1__CR_Localizator.MainForm.resources
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task1__CR_Localizator\Task1__CR_Localizator\obj\Debug\Task1__CR_Localizator.Properties.Resources.resources
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task1__CR_Localizator\Task1__CR_Localizator\obj\Debug\Task1__CR_Localizator.csproj.GenerateResource.cache
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task1__CR_Localizator\Task1__CR_Localizator\obj\Debug\Task1__CR_Localizator.csproj.CoreCompileInputs.cache
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task1__CR_Localizator\Task1__CR_Localizator\obj\Debug\Task1__CR_Localizator.exe
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task1__CR_Localizator\Task1__CR_Localizator\obj\Debug\Task1__CR_Localizator.pdb
