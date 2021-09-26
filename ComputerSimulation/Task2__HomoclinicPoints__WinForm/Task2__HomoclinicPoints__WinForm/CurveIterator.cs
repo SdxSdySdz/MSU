@@ -41,7 +41,62 @@ namespace Task2__HomoclinicPoints__WinForm
 
             // return MakeIterations(0, _segmentAsPolyline, 0);
             return MakeIterationsWithoutRecursion();
+            return MakeIterationsWithoutRecursion_V2();
         }
+
+
+        private Polyline MakeIterationsWithoutRecursion_V2()
+        {
+            /*            int lastUnsuccessIterationCount = 0;
+                        Polyline lastUnsuccessPolyline = _segmentAsPolyline;
+                        int lastUnsuccessSideIndex = 0;
+
+                        bool isSuccessSplitting = false;
+                        Polyline newPolyline = lastUnsuccessPolyline;*/
+
+            List<Vector2> resultPoints = new List<Vector2>();
+            int sideIndex = 0;
+            bool isSlittingSuccess = true;
+
+            int lastUnsuccessIterationCount = 0;
+            Segment lastUnsuccessSide = _segmentAsPolyline.GetSide(sideIndex);
+
+            while (sideIndex < _segmentAsPolyline.SideCount)
+            {
+                isSlittingSuccess = true;
+
+                Segment side = lastUnsuccessSide;
+
+                for (int i = lastUnsuccessIterationCount; i < MaxIterationCount; i++)
+                {
+                    side = _f.Apply(side);
+
+                    if (side.Length > _accuracy)
+                    {
+                        isSlittingSuccess = false;
+
+                        lastUnsuccessIterationCount = i;
+                        lastUnsuccessSide = side;
+
+                        _segmentAsPolyline.SplitSide(sideIndex);
+                        break;
+                    }
+                }
+
+                if (isSlittingSuccess)
+                {
+                    resultPoints.Add(side.Start);
+                    sideIndex++;
+                }
+            }
+
+/*            for (int i = 0; i < MaxIterationCount; i++)
+            {
+                _segmentAsPolyline = _f.Apply(_segmentAsPolyline);
+            }*/
+            return new Polyline(resultPoints);
+        }
+
 
         private Polyline MakeIterationsWithoutRecursion()
         {
@@ -98,11 +153,8 @@ namespace Task2__HomoclinicPoints__WinForm
                     }
                 }
             }
-            
-
 
             return newPolyline;
-
         }
 
         private Polyline MakeIterations(int lastUnsuccessIterationCount, Polyline lastUnsuccessPolyline, int lastUnsuccessSideIndex)

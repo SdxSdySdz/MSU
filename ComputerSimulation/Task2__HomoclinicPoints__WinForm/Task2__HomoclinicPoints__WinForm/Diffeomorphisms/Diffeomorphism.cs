@@ -10,6 +10,14 @@ namespace Task2__HomoclinicPoints__WinForm.Diffeomorphisms
         public abstract Vector2 Apply(Vector2 point);
 
 
+        public Segment Apply(Segment segment)
+        {
+            Vector2 start = Apply(segment.Start);
+            Vector2 end = Apply(segment.End);
+            return new Segment(start, end);
+        }
+
+
         public Vector2[] Apply(IEnumerable<Vector2> points)
         {
             return points.Select(point => Apply(point)).ToArray();
