@@ -70,21 +70,6 @@ namespace Task1__CR_Localizator.Geometry
             return new Domain(Low, High, 2 * RowCount, 2 * ColumnCount);
         }
 
-        public Vector2[] Filter(Vector2[] points)
-        {
-            List<Vector2> filteredPoints = new List<Vector2>();
-
-            foreach (var point in points)
-            {
-                if (ContainsPoint(point))
-                {
-                    filteredPoints.Add(point);
-                }
-            }
-
-            return filteredPoints.ToArray();
-        }
-
 
         public bool ContainsNode(Vector2Int node)
         {

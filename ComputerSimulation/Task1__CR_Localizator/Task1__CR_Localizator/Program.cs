@@ -19,7 +19,7 @@ namespace Task1__CR_Localizator
         [STAThread]
         static void Main()
         {
-            int pointCountInRow = 10;
+            int pointCountInRow = 5;
             PointSampler pointSampler = new UniformSampler(pointCountInRow, pointCountInRow, 0);
             // Homeomorphism f = new QuadraticMapping(pointSampler, 0.29, -0.1);
             Homeomorphism f = new QuadraticMapping(pointSampler, 0.29, -0.1);
@@ -31,7 +31,7 @@ namespace Task1__CR_Localizator
             int columnCount = 5;
             Domain domain = new Domain(low, high, rowCount, columnCount);
 
-            int iterationMaxCount = 6;
+            int iterationMaxCount = 10;
 
             
             // graph

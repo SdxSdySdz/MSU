@@ -305,6 +305,28 @@ namespace Task1__CR_Localizator.Graphs
         }
 
 
+        protected void DFS1WithoutRecursion(Vector2Int node, ref Dictionary<Vector2Int, bool> used, ref List<Vector2Int> order)
+        {
+            Vector2Int currentNode = node;
+            
+            // Stack<(int, )>
+
+            while (true)
+            {
+                used[currentNode] = true;
+
+                foreach (var outNode in _graph[node])
+                {
+                    if (used.TryGetValue(outNode, out var value) == false)
+                    {
+                        DFS1(outNode, ref used, ref order);
+                    }
+
+                }
+            }
+        }
+
+
         protected void DFS2(Vector2Int node, ref Dictionary<Vector2Int, HashSet<Vector2Int>> graphT, ref Dictionary<Vector2Int, bool> used, ref List<Vector2Int> component)
         {
             used[node] = true;

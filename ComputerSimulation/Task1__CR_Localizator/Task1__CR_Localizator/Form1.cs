@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -19,6 +20,8 @@ namespace Task1__CR_Localizator
         private SymbolicImageGraph _graph;
         private Domain _domain;
 
+        private Stopwatch _stopwatch;
+
         private Pen _testPen;
         private Pen _axesPen;
         private Pen _edgePen;
@@ -31,19 +34,42 @@ namespace Task1__CR_Localizator
 
         internal MainForm(int iterationMaxCount, Homeomorphism f, Domain domain)
         {
+            _stopwatch = new Stopwatch();
             InitDrawVariables();
 
             _domain = domain;
-
+            _stopwatch.Start();
             _graph = new SymbolicImageGraph(f, domain);
+            _stopwatch.Stop();
+            Console.WriteLine($"[Time] Constructing graph {_stopwatch.ElapsedMilliseconds}");
 
+            double totalTime = 0;
+            double deletingTime = 0;
+            double splittingTime = 0;
             for (int iterationCount = 0; iterationCount < iterationMaxCount; iterationCount++)
             {
-                _graph.DeleteNonReturnableNodes();
+                Console.WriteLine($"===Iteration {iterationCount + 1}===");
 
+                _stopwatch.Restart();
+                _graph.DeleteNonReturnableNodes();
+                _stopwatch.Stop();
+                deletingTime = _stopwatch.ElapsedMilliseconds;
+                Console.WriteLine($"[Time] Deleting non returnable nodes {deletingTime}");
+
+                _stopwatch.Restart();
                 _graph = _graph.Splitted();
+                _stopwatch.Stop();
+                splittingTime = _stopwatch.ElapsedMilliseconds;
+                Console.WriteLine($"[Time] Splitting {splittingTime}");
                 _domain = _graph.Domain;
+
+
+                // Console.WriteLine($"[Time] SplittingTime / DeletingTime {splittingTime / deletingTime}\n");
+                totalTime += deletingTime + splittingTime;
             }
+
+            Console.WriteLine($"Total time: {totalTime}");
+
 
             InitializeComponent();
         }

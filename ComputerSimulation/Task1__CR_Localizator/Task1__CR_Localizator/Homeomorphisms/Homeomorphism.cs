@@ -35,6 +35,8 @@ namespace Task1__CR_Localizator.Homeomorphisms
             return newPoints;
         }
 
+        // public Vector2[] Apply(Vector2[] points) => points.AsParallel().Select(point => Apply(point)).ToArray();
+
 
         public Vector2[] ApplyToArea(Cell cell)
         {

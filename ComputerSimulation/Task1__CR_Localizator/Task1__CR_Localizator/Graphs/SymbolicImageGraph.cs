@@ -31,12 +31,15 @@ namespace Task1__CR_Localizator.Graphs
                     Cell cell = domain.GetCell(node);
 
                     Vector2[] imagePoints = _f.ApplyToArea(cell);
-                    imagePoints = _domain.Filter(imagePoints);
+                    // imagePoints = _domain.Filter(imagePoints);
 
                     foreach (var imagePoint in imagePoints)
                     {
-                        Vector2Int outNode = _domain.GetNode(imagePoint);
-                        AddEdge(node, outNode);
+                        if (_domain.ContainsPoint(imagePoint))
+                        {
+                            Vector2Int outNode = _domain.GetNode(imagePoint);
+                            AddEdge(node, outNode);
+                        }
                     }
                 }
             }
@@ -45,42 +48,6 @@ namespace Task1__CR_Localizator.Graphs
 
         private SymbolicImageGraph() : base() { }
 
-
-        public SymbolicImageGraph Splitted()
-        {
-            Domain splittedDomain = _domain.Splitted();
-
-            SymbolicImageGraph splittedGraph = new SymbolicImageGraph();
-            splittedGraph._f = _f;
-            splittedGraph._domain = splittedDomain;
-            
-
-            foreach (var node in _graph.Keys)
-            {
-                Vector2Int[] subNodes = _domain.GetSubNodes(node);
-                foreach (var subNode in subNodes)
-                {
-                    Cell subCell = splittedDomain.GetCell(subNode);
-
-                    Vector2[] imagePoints = _f.ApplyToArea(subCell);
-                    imagePoints = splittedDomain.Filter(imagePoints);
-
-                    foreach (var imagePoint in imagePoints)
-                    {
-                        Vector2Int nodeBefore = _domain.GetNode(imagePoint);
-                        if (_graph.TryGetValue(nodeBefore, out var value))
-                        {
-                            Vector2Int outNode = splittedDomain.GetNode(imagePoint);
-                            splittedGraph.AddEdge(subNode, outNode);
-                        } 
-                    }
-                }
-            }
-
-            return splittedGraph;
-        }
-
-        
 
         public override void AddNode(Vector2Int node)
         {
@@ -104,7 +71,46 @@ namespace Task1__CR_Localizator.Graphs
             else
             {
                 throw new Exception("Node is out of domain");
-            }  
+            }
         }
+
+
+        public SymbolicImageGraph Splitted()
+        {
+            Domain splittedDomain = _domain.Splitted();
+
+            SymbolicImageGraph splittedGraph = new SymbolicImageGraph();
+            splittedGraph._f = _f;
+            splittedGraph._domain = splittedDomain;
+            
+
+            foreach (var node in _graph.Keys)
+            {
+                Vector2Int[] subNodes = _domain.GetSubNodes(node);
+                foreach (var subNode in subNodes)
+                {
+                    Cell subCell = splittedDomain.GetCell(subNode);
+
+                    Vector2[] imagePoints = _f.ApplyToArea(subCell);
+                    //imagePoints = splittedDomain.Filter(imagePoints);
+
+                    foreach (var imagePoint in imagePoints)
+                    {
+                        if (_domain.ContainsPoint(imagePoint))
+                        {
+                            Vector2Int nodeBefore = _domain.GetNode(imagePoint);
+
+                            if (_graph.TryGetValue(nodeBefore, out var value))
+                            {
+                                Vector2Int outNode = splittedDomain.GetNode(imagePoint);
+                                splittedGraph.AddEdge(subNode, outNode);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return splittedGraph;
+        } 
     }
 }
