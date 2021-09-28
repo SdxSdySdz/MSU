@@ -11,6 +11,10 @@ namespace Task2__HomoclinicPoints__WinForm.Diffeomorphisms
     {
         private double _alpha;
 
+        public override double MaxEigenvalue => (2.0 + _alpha + Math.Sqrt(_alpha* (_alpha + 4.0))) / 2.0;
+        public override double MinEigenvalue => (2.0 + _alpha - Math.Sqrt(_alpha* (_alpha + 4.0))) / 2.0;
+
+
         public HomeTaskMapping(double alpha)
         {
             _alpha = alpha;
@@ -27,5 +31,20 @@ namespace Task2__HomoclinicPoints__WinForm.Diffeomorphisms
 
             return new Vector2(newX, newY);
         }
+
+
+        public override Vector2 ApplyReverse(Vector2 point)
+        {
+            double x = point.x;
+            double y = point.y;
+
+            double newX = x - y;
+            double newY = y - _alpha * (x - y) * (1 - (x - y) * (x - y));
+
+            return new Vector2(newX, newY);
+        }
+
+
+        protected override Vector2 GetEigenvector(double eigenvalue) => new Vector2(eigenvalue, eigenvalue - 1);   
     }
 }

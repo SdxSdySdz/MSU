@@ -14,12 +14,22 @@ namespace Task2__HomoclinicPoints__WinForm.Geometry
         public double Length { get; private set; }
         public Vector2 Center => (End + Start) / 2.0;
 
+
+        public Segment(Vector2 end) : this(new Vector2(0, 0), end) { }
+
+
         public Segment(Vector2 start, Vector2 end)
         {
             Start = start;
             End = end;
 
             Length = (end - start).Magnitude;
+        }
+
+
+        public bool TryGetIntersection(Segment other, out Vector2 intersaction)
+        {
+            return true;
         }
 
 

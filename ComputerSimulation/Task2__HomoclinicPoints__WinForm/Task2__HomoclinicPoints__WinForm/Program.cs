@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Task2__HomoclinicPoints__WinForm.Diffeomorphisms;
+using Task2__HomoclinicPoints__WinForm.Geometry;
+using Task2__HomoclinicPoints__WinForm.LinearAlgebra;
 
 namespace Task2__HomoclinicPoints__WinForm
 {
@@ -18,9 +20,16 @@ namespace Task2__HomoclinicPoints__WinForm
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            
+            Vector2 low = new Vector2(-2, -2);
+            Vector2 high = new Vector2(2, 2);
+            Rectangle drawArea = new Rectangle(low, high);
 
-            MainForm form = new MainForm();
+            double alpha = 0.4;
+            Diffeomorphism f = new HomeTaskMapping(alpha);
+
+            int maxIterationCount = 6;
+
+            MainForm form = new MainForm(drawArea, f, maxIterationCount);
 
             Application.Run(form);
         }

@@ -12,6 +12,10 @@ namespace Task2__HomoclinicPoints__WinForm.Diffeomorphisms
         private Vector2 _k;
         private Vector2 _b;
 
+        public override double MaxEigenvalue => throw new NotImplementedException();
+        public override double MinEigenvalue => throw new NotImplementedException();
+
+
         public LinearMapping(double k, double b)
         {
             _k = new Vector2(k, k); ;
@@ -36,9 +40,21 @@ namespace Task2__HomoclinicPoints__WinForm.Diffeomorphisms
             _b = b;
         }
 
+        
+
         public override Vector2 Apply(Vector2 point)
         {
             return _k * point + _b;
+        }
+
+        protected override Vector2 GetEigenvector(double eigenvalue)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Vector2 ApplyReverse(Vector2 point)
+        {
+            throw new NotImplementedException();
         }
     }
 }

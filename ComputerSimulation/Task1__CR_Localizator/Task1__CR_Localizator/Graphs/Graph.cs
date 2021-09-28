@@ -42,7 +42,8 @@ namespace Task1__CR_Localizator.Graphs
                 {
                     if (used.TryGetValue(node, out var value) == false)
                     {
-                        DFS1(node, ref used, ref order);
+                        // DFS1(node, ref used, ref order);
+                        DFS1WithoutRecursion(node, ref used, ref order);
                     }
                 }
 
@@ -305,23 +306,43 @@ namespace Task1__CR_Localizator.Graphs
         }
 
 
-        protected void DFS1WithoutRecursion(Vector2Int node, ref Dictionary<Vector2Int, bool> used, ref List<Vector2Int> order)
+        public void DFS1WithoutRecursion(Vector2Int node, ref Dictionary<Vector2Int, bool> used, ref List<Vector2Int> order)
         {
-            Vector2Int currentNode = node;
-            
-            // Stack<(int, )>
+            Stack<(Vector2Int, HashSet<Vector2Int>)> memory = new Stack<(Vector2Int, HashSet<Vector2Int>)>();
+            memory.Push((node, new HashSet<Vector2Int>(_graph[node])));
 
-            while (true)
+            Vector2Int currentNode;
+            
+            bool allUsed;
+            while (memory.Count > 0)
             {
+                allUsed = true;
+                HashSet<Vector2Int> remainingOutNodes = new HashSet<Vector2Int>();
+
+                (currentNode, remainingOutNodes) = memory.Peek();
                 used[currentNode] = true;
 
-                foreach (var outNode in _graph[node])
+                if (remainingOutNodes.Count > 0)
                 {
-                    if (used.TryGetValue(outNode, out var value) == false)
+                    foreach (var outNode in new HashSet<Vector2Int>(remainingOutNodes))
                     {
-                        DFS1(outNode, ref used, ref order);
-                    }
+                        //remainingOutNodes.Remove(outNode); ?????????????????????
 
+                        if (used.TryGetValue(outNode, out var value) == false)
+                        {
+                            allUsed = false;
+                            memory.Push((outNode, _graph[outNode]));
+                            currentNode = outNode;
+                            break;
+                            // DFS1(outNode, ref used, ref order);
+                        }
+                    }
+                }
+
+                if (allUsed)
+                {
+                    order.Add(currentNode);
+                    memory.Pop();
                 }
             }
         }

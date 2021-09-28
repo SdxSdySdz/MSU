@@ -11,114 +11,137 @@ using System.Windows.Forms;
 using Task2__HomoclinicPoints__WinForm.Diffeomorphisms;
 using Task2__HomoclinicPoints__WinForm.Geometry;
 using Task2__HomoclinicPoints__WinForm.LinearAlgebra;
+using Task2__HomoclinicPoints__WinForm.CurveIteration;
+using System.Diagnostics;
 
 namespace Task2__HomoclinicPoints__WinForm
 {
     public partial class MainForm : Form
     {
-        private Graphics _graphics;
-        private Pen _pen;
+        private Geometry.Rectangle _drawArea;
+
+        private Stopwatch _stopwatch;
+
+        private Pen _testPen;
         private Pen _axesPen;
-        private Polyline _polyline;
-        private float _startScaleBarPercent;
-        private float _startRightEdgeValue;
-        private float _minRightEdgeValue;
-        private float _maxRightEdgeValue;
+        private Pen _stableCurvePen;
+        private Pen _unstableCurvePen;
 
-        private Point LeftPosition => new Point(0, Canvas.Height / 2);
-        private Point RightPosition => new Point(Canvas.Width, Canvas.Height / 2);
-        private Point TopPosition => new Point(Canvas.Width / 2, 0);
-        private Point BottomPosition => new Point(Canvas.Width / 2, Canvas.Height);
+        private Polyline _stableCurve;
+        private Polyline _unstableCurve;
 
-        public MainForm()
+
+        internal MainForm(Geometry.Rectangle domain, Diffeomorphism f, int maxIterationCount)
         {
             InitializeComponent();
 
-            _pen = new Pen(Color.Red);
-            _axesPen = new Pen(Color.Black);
+            _stopwatch = new Stopwatch();
+            InitDrawVariables();
 
-            _pen.Width = float.MinValue;
-            _axesPen.Width = 0.015f;
+            _drawArea = domain;
 
-            _graphics = Canvas.CreateGraphics();
+            double accuracy = 0.01;
+            CurveIterator curveIterator = new CurveIterator(f, maxIterationCount, accuracy);
+
+            double discountingCoefficient = 0.1;
+
+            /*** SOLVING STABLE CURVE ***/
+            Segment stableSegment = new Segment(f.MaxEigenvector * discountingCoefficient);
+            _stableCurve = curveIterator.Solve(stableSegment, IterationDirection.Positive);
+
+            /*** SOLVING UNSTABLE CURVE ***/
+            Segment unstableSegment = new Segment(f.MinEigenvector * discountingCoefficient);
+            _unstableCurve = curveIterator.Solve(unstableSegment, IterationDirection.Negative);
 
 
-            _minRightEdgeValue = 1;
-            _maxRightEdgeValue = 10;
-            _startRightEdgeValue = 2.5f;
-
-            _startScaleBarPercent = _startRightEdgeValue / (_maxRightEdgeValue - _minRightEdgeValue);
-            ScaleBar.Value = (int)(ScaleBar.Minimum + _startScaleBarPercent * (ScaleBar.Maximum - ScaleBar.Minimum));
+            Console.WriteLine(f.MinEigenvector.ToString());
+            Console.WriteLine(f.MaxEigenvector);
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+
+        private void InitDrawVariables()
         {
-           
+            var axesColor = Color.FromArgb(45, 64, 89);
+            var axesPenWidth = 0.01f;
+            _axesPen = new Pen(axesColor, axesPenWidth);
+
+            var stableCurvePenColor = Color.Red;
+            var stableCurvePenWidth = 0.01f;
+            _stableCurvePen = new Pen(stableCurvePenColor, stableCurvePenWidth);
+
+            var unstableCurvePenColor = Color.Blue;
+            var unstableCurvePenWidth = 0.01f;
+            _unstableCurvePen = new Pen(unstableCurvePenColor, unstableCurvePenWidth);
+
+            var testPenColor = Color.Pink;
+            var testPenWidth = 0.01f;
+            _testPen = new Pen(testPenColor, testPenWidth);
         }
 
-        private void DrawPolyline()
-        {
-            _graphics.DrawLines(_pen, _polyline.Vertexes.Select(vertex => (PointF)vertex).ToArray());
-        }
 
         private void Canvas_Paint(object sender, PaintEventArgs e)
         {
-            _graphics.ScaleTransform(1, -1);
+            NormalizeView(e.Graphics);
 
+            // DrawGrid(e.Graphics);
+            // DrawAxes(e.Graphics);
 
-            double aplha = 0.4;
-            Diffeomorphism f = new HomeTaskMapping(aplha);
-
-            int maxIterationCount = 10;
-            double accuracy = 0.1;
-            CurveIterator curveIterator = new CurveIterator(f, maxIterationCount, accuracy);
-
-            Vector2 start = new Vector2(0, 0);
-            Vector2 end = new Vector2(1, 0.47f);
-            Segment segment = new Segment(start, end);
-
-            _polyline = curveIterator.Solve(segment);
-
-            Draw(_startScaleBarPercent, _minRightEdgeValue, _maxRightEdgeValue);  
+            DrawPolyline(e.Graphics, _stableCurve, _stableCurvePen);
+            DrawPolyline(e.Graphics, _unstableCurve, _unstableCurvePen);
         }
 
-        private void DrawAxes()
+
+        private void DrawPolyline(Graphics graphics, Polyline polyline, Pen pen)
         {
-            _graphics.DrawLine(_axesPen, LeftPosition, RightPosition);
-            _graphics.DrawLine(_axesPen, BottomPosition, TopPosition);
+            graphics.DrawLines(pen, polyline.Vertexes.Select(vertex => (PointF)vertex).ToArray());
         }
 
 
-        private void Draw(float scalePercent, float minScale, float maxScale)
+        private void NormalizeView(Graphics graphics)
         {
-            _graphics.ResetTransform();
-            Vector2 canvasSize = new Vector2(Canvas.Size.Width, Canvas.Size.Height);
-            Vector2 offset = canvasSize / 2.0;
-            
+            float alpha = Convert.ToSingle(Canvas.Width) / Convert.ToSingle(Canvas.Height);
+            float alphaDomain = Convert.ToSingle(_drawArea.Width / _drawArea.Height);
 
-            _graphics.Clear(Color.White);
-            DrawAxes();
-            _graphics.TranslateTransform((float)offset.x, (float)offset.y);
+            float targetWidth = Math.Max(alpha, alphaDomain) * (float)_drawArea.Height / 2f;
 
-            float scale = minScale + scalePercent * (maxScale - minScale);
-            _graphics.ScaleTransform(Canvas.Size.Width / 2f / scale, Canvas.Size.Width / 2f / scale);
+            float scale = Canvas.Width / 2f / targetWidth;
 
-            
-            DrawPolyline();
+            graphics.TranslateTransform(Canvas.Width / 2f, Canvas.Height / 2f);
+            graphics.ScaleTransform(scale, -scale);
 
-            float radius = 0.25f;
-            _graphics.DrawEllipse(_pen, -1 - radius, 0 + radius, 2 * radius, -2 * radius);
-            _graphics.DrawEllipse(_pen, 1 - radius, 0 + radius, 2 * radius, -2 * radius);
-            _graphics.DrawEllipse(_pen, 5 - radius, 0 + radius, 2 * radius, -2 * radius);
-
+            graphics.TranslateTransform((float)-_drawArea.Center.x, (float)-_drawArea.Center.y);
         }
+
+
+        private void DrawAxes(Graphics graphics)
+        {
+            graphics.DrawEllipse(_axesPen, 1 - 2 * 0.01f, 0 - 2 * 0.01f, 2 * 2 * 0.01f, 2 * 2 * 0.01f);
+
+            /*            float minValue = (float)Math.Min(_domain.Low.x, _domain.Low.y);
+                        float maxValue = (float)Math.Max(_domain.High.x, _domain.High.y);*/
+
+            float minValue = -5;
+            float maxValue = 5;
+
+            graphics.DrawLine(_axesPen, minValue, 0, maxValue, 0);
+            graphics.DrawLine(_axesPen, 0, minValue, 0, maxValue);
+        }
+
+
+        private void DrawCircle(Graphics graphics, Pen pen, float centerX, float centerY, float radius)
+        {
+            graphics.DrawEllipse(pen, centerX - radius, centerY - radius, 2 * radius, 2 * radius);
+        }
+
 
         private void ScaleBar_ValueChanged(object sender, EventArgs e)
         {
-            float scale = (float)ScaleBar.Value / (ScaleBar.Maximum - ScaleBar.Minimum);
+/*            float scale = (float)ScaleBar.Value / (ScaleBar.Maximum - ScaleBar.Minimum);
 
             if (_polyline != null)
-                Draw(scale, _minRightEdgeValue, _maxRightEdgeValue);
+                Draw(scale, _minRightEdgeValue, _maxRightEdgeValue);*/
+
+
         }
     }
 }
