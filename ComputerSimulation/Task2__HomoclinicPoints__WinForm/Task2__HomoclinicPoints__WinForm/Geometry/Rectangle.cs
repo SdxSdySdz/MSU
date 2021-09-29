@@ -42,5 +42,14 @@ namespace Task2__HomoclinicPoints__WinForm.Geometry
             Low += difference;
             High += difference;
         }
+
+
+        public bool Intersects(Rectangle other)
+        {
+            double errorRate = 1E-10;
+            return (Math.Max(MinX, other.MinX) <= Math.Min(MaxX, other.MaxX) + errorRate) &&
+                   (Math.Max(MinY, other.MinY) <= Math.Min(MaxY, other.MaxY) + errorRate);
+
+        }
     }
 }

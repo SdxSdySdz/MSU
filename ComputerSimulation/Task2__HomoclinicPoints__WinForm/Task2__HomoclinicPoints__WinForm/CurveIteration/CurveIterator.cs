@@ -46,11 +46,6 @@ namespace Task2__HomoclinicPoints__WinForm.CurveIteration
             }
 
             _segmentAsPolyline = new Polyline(segment);
-            
-            if (segment.Length <= _accuracy)
-            {
-                return _segmentAsPolyline;
-            }
 
             // return MakeIterations(0, _segmentAsPolyline, 0);
             // return MakeIterationsWithoutRecursion();

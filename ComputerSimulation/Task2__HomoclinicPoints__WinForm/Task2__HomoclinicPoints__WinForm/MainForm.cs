@@ -40,17 +40,17 @@ namespace Task2__HomoclinicPoints__WinForm
 
             _drawArea = domain;
 
-            double accuracy = 0.01;
+            double accuracy = 0.1;
             CurveIterator curveIterator = new CurveIterator(f, maxIterationCount, accuracy);
 
-            double discountingCoefficient = 0.1;
+            double eigenvectorLength = 0.00001;
 
             /*** SOLVING STABLE CURVE ***/
-            Segment stableSegment = new Segment(f.MaxEigenvector * discountingCoefficient);
+            Segment stableSegment = new Segment(f.MaxEigenvector * eigenvectorLength);
             _stableCurve = curveIterator.Solve(stableSegment, IterationDirection.Positive);
 
             /*** SOLVING UNSTABLE CURVE ***/
-            Segment unstableSegment = new Segment(f.MinEigenvector * discountingCoefficient);
+            Segment unstableSegment = new Segment(f.MinEigenvector * eigenvectorLength);
             _unstableCurve = curveIterator.Solve(unstableSegment, IterationDirection.Negative);
 
 
@@ -88,6 +88,12 @@ namespace Task2__HomoclinicPoints__WinForm
 
             DrawPolyline(e.Graphics, _stableCurve, _stableCurvePen);
             DrawPolyline(e.Graphics, _unstableCurve, _unstableCurvePen);
+
+            if (_stableCurve.TryGetFirstIntersectionPoint(_unstableCurve, out Vector2 intersectionPoint))
+            {
+                Console.Write("WOOOOOOOOOOOOOOOOW");
+                DrawCircle(e.Graphics, _axesPen, (float)intersectionPoint.x, (float)intersectionPoint.y, 0.1f);
+            }
         }
 
 

@@ -50,6 +50,41 @@ namespace Task2__HomoclinicPoints__WinForm.Geometry
             _vertexes.Insert(sideIndex + 1, point);
         }
 
+
+        public bool TryGetFirstIntersectionPoint(Polyline other, out Vector2 intersection)
+        {
+            bool isFirstIntersection = true;
+            for (int sideIndex = 0; sideIndex < SideCount; sideIndex++)
+            {
+                Segment thisSegment = GetSide(sideIndex);
+                for (int otherSideIndex = 0; otherSideIndex < other.SideCount; otherSideIndex++)
+                {
+                    Segment otherSegment = other.GetSide(otherSideIndex);
+                    /*                    if ((thisSegment.Center - otherSegment.Center).Magnitude < 0.01)
+                                        {
+                                            if (isFirstIntersection == false)
+                                            {
+                                                Console.WriteLine(thisSegment);
+                                                Console.WriteLine(otherSegment);
+                                                intersection = (thisSegment.Center + otherSegment.Center) / 2.0;
+                                                return true;
+                                            }
+
+                                            isFirstIntersection = false;
+                                        }*/
+
+                    if (thisSegment.TryGetIntersectionPoint(otherSegment, out intersection))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            intersection = new Vector2(double.PositiveInfinity, double.PositiveInfinity);
+            return false;
+        }
+
+
         public override string ToString()
         {
             string output = "Polyline { ";
