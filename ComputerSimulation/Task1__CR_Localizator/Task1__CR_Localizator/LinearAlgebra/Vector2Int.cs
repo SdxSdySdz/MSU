@@ -12,14 +12,14 @@ namespace Task1__CR_Localizator.LinearAlgebra
         public int y { get; private set; }
         public int Row => x;
         public int Column => y;
-
+        
         public static Vector2Int Zero => new Vector2Int(0, 0);
         public static Vector2Int One => new Vector2Int(1, 1);
         public static Vector2Int Up => new Vector2Int(0, 1);
         public static Vector2Int Down => new Vector2Int(0, -1);
         public static Vector2Int Right => new Vector2Int(1, 0);
         public static Vector2Int Left => new Vector2Int(-1, 0);
-
+        
 
         public Vector2Int(int x, int y)
         {
@@ -30,7 +30,7 @@ namespace Task1__CR_Localizator.LinearAlgebra
 
         public Vector2Int(Vector2Int vector) : this(vector.x, vector.y) { }
 
-
+        
         public static Vector2Int operator +(Vector2Int a, Vector2Int b) => new Vector2Int(a.x + b.x, a.y + b.y);
         public static Vector2Int operator -(Vector2Int a, Vector2Int b) => new Vector2Int(a.x - b.x, a.y - b.y);
         public static Vector2Int operator *(Vector2Int a, Vector2Int b) => new Vector2Int(a.x * b.x, a.y * b.y);

@@ -196,9 +196,70 @@ namespace Task1__CR_Localizator.Graphs
 
         public void DeleteNonReturnableNodes()
         {
-            DeleteNodes(NonReturnableNodes);
+            var extraNodes = GetNonReturnableNodes();
+            DeleteNodes(extraNodes);
         }
 
+
+        /*** TMP ***/
+        private List<Vector2Int> GetNonReturnableNodes()
+        {
+            List<List<Vector2Int>> stronglyConnectedComponents = GetStronglyConnectedComponents();
+            List<Vector2Int> nonReturnableNodes = new List<Vector2Int>();
+
+            foreach (var component in stronglyConnectedComponents)
+            {
+                if (component.Count == 1)
+                {
+                    var node = component[0];
+                    if (_graph[node].Contains(node) == false)
+                    {
+                        nonReturnableNodes.Add(node);
+                    }
+                }
+            }
+
+            return nonReturnableNodes;
+        }
+
+        /*** TMP ***/
+        private List<List<Vector2Int>> GetStronglyConnectedComponents()
+        {
+
+            List<List<Vector2Int>> components = new List<List<Vector2Int>>();
+
+            Dictionary<Vector2Int, bool> used = new Dictionary<Vector2Int, bool>();
+            List<Vector2Int> order = new List<Vector2Int>();
+
+            foreach (var node in _graph.Keys)
+            {
+                if (used.TryGetValue(node, out var value) == false)
+                {
+                    // DFS1(node, ref used, ref order);
+                    // DFS1WithoutRecursion(node, ref used, ref order);
+                    DFS1WithoutRecursion_V2(node, ref used, ref order);
+                }
+            }
+
+            Dictionary<Vector2Int, HashSet<Vector2Int>> graphT = TransposedDictionary;
+            List<Vector2Int> component = new List<Vector2Int>();
+            used.Clear();
+            for (int i = 0; i < order.Count; i++)
+            {
+                Vector2Int node = order[order.Count - 1 - i];
+
+                if (used.TryGetValue(node, out var value) == false)
+                {
+                    // DFS2(node, ref graphT, ref used, ref component);
+                    DFS2WithoutRecursion(node, ref graphT, ref used, ref component);
+                    components.Add(new List<Vector2Int>(component));
+                    component.Clear();
+                }
+            }
+
+            return components;
+
+        }
 
         /*** ADDING ***/
         public void AddNode(int row, int column)
@@ -348,6 +409,49 @@ namespace Task1__CR_Localizator.Graphs
         }
 
 
+        public void DFS1WithoutRecursion_V2(Vector2Int node, ref Dictionary<Vector2Int, bool> used, ref List<Vector2Int> order)
+        {
+            Stack<Vector2Int> memory = new Stack<Vector2Int>();
+            memory.Push(node);
+
+            Vector2Int currentNode;
+
+            bool allUsed;
+            while (memory.Count > 0)
+            {
+                allUsed = true;
+                currentNode = memory.Peek();
+                used[currentNode] = true;
+
+                HashSet<Vector2Int> remainingOutNodes = _graph[currentNode];
+
+                if (remainingOutNodes.Count > 0)
+                {
+                    foreach (var outNode in new HashSet<Vector2Int>(remainingOutNodes))
+                    {
+                        //remainingOutNodes.Remove(outNode); ?????????????????????
+
+                        if (used.TryGetValue(outNode, out var value) == false)
+                        {
+                            allUsed = false;
+                            memory.Push(outNode);
+                            currentNode = outNode;
+                            break;
+                            // DFS1(outNode, ref used, ref order);
+                        }
+                    }
+                }
+
+                if (allUsed)
+                {
+                    order.Add(currentNode);
+                    memory.Pop();
+                }
+            }
+        }
+
+
+
         protected void DFS2(Vector2Int node, ref Dictionary<Vector2Int, HashSet<Vector2Int>> graphT, ref Dictionary<Vector2Int, bool> used, ref List<Vector2Int> component)
         {
             used[node] = true;
@@ -362,7 +466,59 @@ namespace Task1__CR_Localizator.Graphs
             }
         }
 
-        
+
+        protected void DFS2WithoutRecursion(Vector2Int node, ref Dictionary<Vector2Int, HashSet<Vector2Int>> graphT, ref Dictionary<Vector2Int, bool> used, ref List<Vector2Int> component)
+        {
+/*            used[node] = true;
+            component.Add(node);
+
+            foreach (var outNode in graphT[node])
+            {
+                if (used.TryGetValue(outNode, out var value) == false)
+                {
+                    DFS2(outNode, ref graphT, ref used, ref component);
+                }
+            }*/
+
+
+
+            Stack<Vector2Int> memory = new Stack<Vector2Int>();
+            memory.Push(node);
+
+            Vector2Int currentNode;
+            bool allUsed;
+            while (memory.Count > 0)
+            {
+                allUsed = true;
+                currentNode = memory.Peek();
+
+                component.Add(currentNode);
+                used[currentNode] = true;
+
+                HashSet<Vector2Int> remainingOutNodes = graphT[currentNode];
+
+                if (remainingOutNodes.Count > 0)
+                {
+                    foreach (var outNode in remainingOutNodes)
+                    {
+                        if (used.TryGetValue(outNode, out var value) == false)
+                        {
+                            allUsed = false;
+                            memory.Push(outNode);
+                            break;
+                        }
+                    }
+                }
+
+
+                if (allUsed)
+                {
+                    memory.Pop();
+                }
+            }
+        }
+
+
         private bool ContainsNode(Vector2Int node)
         {
             return _graph.TryGetValue(node, out var value);

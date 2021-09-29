@@ -19,11 +19,11 @@ namespace Task1__CR_Localizator
         [STAThread]
         static void Main()
         {
-            int pointCountInRow = 3;
+            int pointCountInRow = 10;
             PointSampler pointSampler = new UniformSampler(pointCountInRow, pointCountInRow, 0);
             // Homeomorphism f = new QuadraticMapping(pointSampler, 0.29, -0.1);
-            // Homeomorphism f = new QuadraticMapping(pointSampler, 0.29, -0.1);
-            Homeomorphism f = new ControlTaskMapping(pointSampler, 1.05, -0.9, 1.2);
+            Homeomorphism f = new QuadraticMapping(pointSampler, 0.29, -0.1);
+            // Homeomorphism f = new ControlTaskMapping(pointSampler, 1.05, -0.9, 1.2);
 
             Vector2 low = new Vector2(-3, -3);
             Vector2 high = new Vector2(3, 3);
