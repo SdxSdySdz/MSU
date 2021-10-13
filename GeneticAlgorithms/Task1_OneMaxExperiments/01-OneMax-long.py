@@ -11,10 +11,10 @@ import seaborn as sns
 ONE_MAX_LENGTH = 100  # length of bit string to be optimized
 
 # Genetic Algorithm constants:
-POPULATION_SIZE = 200
+POPULATION_SIZE = 500
 P_CROSSOVER = 0.9  # probability for crossover
 P_MUTATION = 0.1   # probability for mutating an individual
-MAX_GENERATIONS = 50
+MAX_GENERATIONS = 100
 
 
 # set the random seed:
@@ -83,7 +83,8 @@ def main():
     # main evolutionary loop:
     # stop if max fitness value reached the known max value
     # OR if number of generations exceeded the preset value:
-    while max(fitnessValues) < ONE_MAX_LENGTH and generationCounter < MAX_GENERATIONS:
+    # while max(fitnessValues) < ONE_MAX_LENGTH and generationCounter < MAX_GENERATIONS:
+    for i in range(MAX_GENERATIONS):
         # update counter:
         generationCounter = generationCounter + 1
 
