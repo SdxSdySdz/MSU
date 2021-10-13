@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31410.357
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Task4__BalancingIterator", "Task4__BalancingIterator\Task4__BalancingIterator.csproj", "{EF680361-9446-4668-9C72-6322C0DEA45B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EF680361-9446-4668-9C72-6322C0DEA45B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF680361-9446-4668-9C72-6322C0DEA45B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF680361-9446-4668-9C72-6322C0DEA45B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF680361-9446-4668-9C72-6322C0DEA45B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0779E550-92B4-4536-A35F-DAAE9699C567}
+	EndGlobalSection
+EndGlobal

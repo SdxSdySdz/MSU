@@ -37,7 +37,7 @@ namespace Task1__CR_Localizator
             this.Canvas.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Canvas.Location = new System.Drawing.Point(0, 0);
             this.Canvas.Name = "Canvas";
-            this.Canvas.Size = new System.Drawing.Size(1296, 805);
+            this.Canvas.Size = new System.Drawing.Size(1296, 656);
             this.Canvas.TabIndex = 0;
             this.Canvas.Paint += new System.Windows.Forms.PaintEventHandler(this.Canvas_Paint);
             // 
@@ -48,6 +48,7 @@ namespace Task1__CR_Localizator
             this.ClientSize = new System.Drawing.Size(1296, 656);
             this.Controls.Add(this.Canvas);
             this.Name = "MainForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "CR Set Localizator";
             this.ResumeLayout(false);
 

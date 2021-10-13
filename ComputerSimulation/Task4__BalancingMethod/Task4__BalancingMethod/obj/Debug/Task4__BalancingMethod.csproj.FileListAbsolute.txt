@@ -1,0 +1,17 @@
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task4__BalancingMethod\Task4__BalancingMethod\bin\Debug\Task4__BalancingMethod.exe.config
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task4__BalancingMethod\Task4__BalancingMethod\bin\Debug\Task4__BalancingMethod.exe
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task4__BalancingMethod\Task4__BalancingMethod\bin\Debug\Task4__BalancingMethod.pdb
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task4__BalancingMethod\Task4__BalancingMethod\bin\Debug\Tao.FreeGlut.dll
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task4__BalancingMethod\Task4__BalancingMethod\bin\Debug\Tao.OpenGl.dll
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task4__BalancingMethod\Task4__BalancingMethod\bin\Debug\Tao.Platform.Windows.dll
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task4__BalancingMethod\Task4__BalancingMethod\bin\Debug\Tao.FreeGlut.xml
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task4__BalancingMethod\Task4__BalancingMethod\bin\Debug\Tao.OpenGl.xml
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task4__BalancingMethod\Task4__BalancingMethod\bin\Debug\Tao.Platform.Windows.xml
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task4__BalancingMethod\Task4__BalancingMethod\obj\Debug\Task4__BalancingMethod.MainForm.resources
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task4__BalancingMethod\Task4__BalancingMethod\obj\Debug\Task4__BalancingMethod.Properties.Resources.resources
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task4__BalancingMethod\Task4__BalancingMethod\obj\Debug\Task4__BalancingMethod.csproj.GenerateResource.cache
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task4__BalancingMethod\Task4__BalancingMethod\obj\Debug\Task4__BalancingMethod.csproj.CoreCompileInputs.cache
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task4__BalancingMethod\Task4__BalancingMethod\obj\Debug\Task4__BalancingMethod.csproj.CopyComplete
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task4__BalancingMethod\Task4__BalancingMethod\obj\Debug\Task4__BalancingMethod.exe
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task4__BalancingMethod\Task4__BalancingMethod\obj\Debug\Task4__BalancingMethod.pdb
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task4__BalancingMethod\Task4__BalancingMethod\obj\Debug\Task4__BalancingMethod.csproj.AssemblyReference.cache

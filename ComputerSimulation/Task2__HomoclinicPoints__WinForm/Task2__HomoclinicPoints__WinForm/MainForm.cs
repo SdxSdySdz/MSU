@@ -22,78 +22,93 @@ namespace Task2__HomoclinicPoints__WinForm
 
         private Stopwatch _stopwatch;
 
+        private Color _backgroundColor;
         private Pen _testPen;
         private Pen _axesPen;
         private Pen _stableCurvePen;
         private Pen _unstableCurvePen;
+        private Brush _intersectionPointBrush;
 
+        private double _eigenvectorLength;
         private Polyline _stableCurve;
         private Polyline _unstableCurve;
 
 
-        internal MainForm(Geometry.Rectangle domain, Diffeomorphism f, int maxIterationCount)
+        internal MainForm(
+            Geometry.Rectangle domain, 
+            Diffeomorphism f, 
+            int maxIterationCount,
+            double minSideLength,
+            double eigenvectorLength
+            )
         {
             InitializeComponent();
 
             _stopwatch = new Stopwatch();
             InitDrawVariables();
-
             _drawArea = domain;
+            _eigenvectorLength = eigenvectorLength;
 
-            double accuracy = 0.1;
-            CurveIterator curveIterator = new CurveIterator(f, maxIterationCount, accuracy);
 
-            double eigenvectorLength = 0.00001;
+            CurveIterator curveIterator = new CurveIterator(f, maxIterationCount, minSideLength);
+
+            Console.WriteLine(f.MaxEigenvector);
+            Console.WriteLine(f.MinEigenvector);
 
             /*** SOLVING STABLE CURVE ***/
-            Segment stableSegment = new Segment(f.MaxEigenvector * eigenvectorLength);
+            Segment stableSegment = new Segment(f.MaxEigenvector * _eigenvectorLength);
             _stableCurve = curveIterator.Solve(stableSegment, IterationDirection.Positive);
 
             /*** SOLVING UNSTABLE CURVE ***/
-            Segment unstableSegment = new Segment(f.MinEigenvector * eigenvectorLength);
+            Segment unstableSegment = new Segment(f.MinEigenvector * _eigenvectorLength);
             _unstableCurve = curveIterator.Solve(unstableSegment, IterationDirection.Negative);
-
-
-            Console.WriteLine(f.MinEigenvector.ToString());
-            Console.WriteLine(f.MaxEigenvector);
         }
 
 
         private void InitDrawVariables()
         {
-            var axesColor = Color.FromArgb(45, 64, 89);
+            _backgroundColor = Color.FromArgb(50, 50, 50);
+
+            var axesColor = Color.FromArgb(25, 240, 245, 249);
             var axesPenWidth = 0.01f;
             _axesPen = new Pen(axesColor, axesPenWidth);
 
-            var stableCurvePenColor = Color.Red;
+            var stableCurvePenColor = Color.FromArgb(234, 221, 41);
             var stableCurvePenWidth = 0.01f;
             _stableCurvePen = new Pen(stableCurvePenColor, stableCurvePenWidth);
 
-            var unstableCurvePenColor = Color.Blue;
+            var unstableCurvePenColor = Color.FromArgb(84, 141, 212);
             var unstableCurvePenWidth = 0.01f;
             _unstableCurvePen = new Pen(unstableCurvePenColor, unstableCurvePenWidth);
 
             var testPenColor = Color.Pink;
             var testPenWidth = 0.01f;
             _testPen = new Pen(testPenColor, testPenWidth);
+
+            var intersectionPointColor = Color.Red; // Color.FromArgb(247, 251, 252);
+            _intersectionPointBrush = new SolidBrush(intersectionPointColor);
         }
 
 
         private void Canvas_Paint(object sender, PaintEventArgs e)
         {
+            e.Graphics.Clear(_backgroundColor);
             NormalizeView(e.Graphics);
 
             // DrawGrid(e.Graphics);
-            // DrawAxes(e.Graphics);
+            DrawAxes(e.Graphics);
 
             DrawPolyline(e.Graphics, _stableCurve, _stableCurvePen);
             DrawPolyline(e.Graphics, _unstableCurve, _unstableCurvePen);
 
-            if (_stableCurve.TryGetFirstIntersectionPoint(_unstableCurve, out Vector2 intersectionPoint))
+            /*if (_stableCurve.TryGetFirstIntersectionPoint(_unstableCurve, out Vector2 intersectionPoint, out double angle))
             {
-                Console.Write("WOOOOOOOOOOOOOOOOW");
-                DrawCircle(e.Graphics, _axesPen, (float)intersectionPoint.x, (float)intersectionPoint.y, 0.1f);
-            }
+                Console.WriteLine($"[Eigenvector length] {_eigenvectorLength} [Intersection point] {intersectionPoint} [Angle] {angle}");
+                FillCircle(e.Graphics, _intersectionPointBrush, (float)intersectionPoint.x, (float)intersectionPoint.y, 0.02f);
+                // DrawCircle(e.Graphics, _axesPen, (float)intersectionPoint.x, (float)intersectionPoint.y, 0.1f);
+            }*/
+
+            FillCircle(e.Graphics, _intersectionPointBrush, (float)1.1050348915755, (float)-0.353424112723881, 0.02f);
         }
 
 
@@ -121,11 +136,6 @@ namespace Task2__HomoclinicPoints__WinForm
 
         private void DrawAxes(Graphics graphics)
         {
-            graphics.DrawEllipse(_axesPen, 1 - 2 * 0.01f, 0 - 2 * 0.01f, 2 * 2 * 0.01f, 2 * 2 * 0.01f);
-
-            /*            float minValue = (float)Math.Min(_domain.Low.x, _domain.Low.y);
-                        float maxValue = (float)Math.Max(_domain.High.x, _domain.High.y);*/
-
             float minValue = -5;
             float maxValue = 5;
 
@@ -137,6 +147,12 @@ namespace Task2__HomoclinicPoints__WinForm
         private void DrawCircle(Graphics graphics, Pen pen, float centerX, float centerY, float radius)
         {
             graphics.DrawEllipse(pen, centerX - radius, centerY - radius, 2 * radius, 2 * radius);
+        }
+
+
+        private void FillCircle(Graphics graphics, Brush brush, float centerX, float centerY, float radius)
+        {
+            graphics.FillEllipse(brush, centerX - radius, centerY - radius, 2 * radius, 2 * radius);
         }
 
 

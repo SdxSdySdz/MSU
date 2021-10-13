@@ -54,7 +54,7 @@ namespace Task2__HomoclinicPoints__WinForm.Geometry
         }
 
 
-        public bool TryGetIntersectionPoint(Segment other, out Vector2 intersection)
+        public bool TryGetIntersectionPoint(Segment other, out Vector2 intersection, out double angle)
         {
             Vector2 end1 = End;
             Vector2 start1 = Start;
@@ -83,6 +83,7 @@ namespace Task2__HomoclinicPoints__WinForm.Geometry
             //если концы одного отрезка имеют один знак, значит он в одной полуплоскости и пересечения нет.
             if (seg1_line2_start * seg1_line2_end >= 0 || seg2_line1_start * seg2_line1_end >= 0)
             {
+                angle = 0;
                 intersection = new Vector2(double.PositiveInfinity, double.PositiveInfinity);
                 return false;
             }
@@ -90,6 +91,10 @@ namespace Task2__HomoclinicPoints__WinForm.Geometry
 
             double u = seg1_line2_start / (seg1_line2_start - seg1_line2_end);
             intersection = start1 + u * dir1;
+
+            Vector2 product = dir1 * dir2;
+            double scalar_product = product.x + product.y;
+            angle = Math.Acos(Math.Abs(scalar_product) / (dir1.Magnitude * dir2.Magnitude)) * 180.0 / Math.PI;
             return true;
 
 

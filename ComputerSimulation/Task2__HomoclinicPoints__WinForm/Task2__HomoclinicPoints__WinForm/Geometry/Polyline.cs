@@ -51,7 +51,7 @@ namespace Task2__HomoclinicPoints__WinForm.Geometry
         }
 
 
-        public bool TryGetFirstIntersectionPoint(Polyline other, out Vector2 intersection)
+        public bool TryGetFirstIntersectionPoint(Polyline other, out Vector2 intersection, out double angle)
         {
             bool isFirstIntersection = true;
             for (int sideIndex = 0; sideIndex < SideCount; sideIndex++)
@@ -73,7 +73,7 @@ namespace Task2__HomoclinicPoints__WinForm.Geometry
                                             isFirstIntersection = false;
                                         }*/
 
-                    if (thisSegment.TryGetIntersectionPoint(otherSegment, out intersection))
+                    if (thisSegment.TryGetIntersectionPoint(otherSegment, out intersection, out angle))
                     {
                         return true;
                     }
@@ -81,6 +81,7 @@ namespace Task2__HomoclinicPoints__WinForm.Geometry
             }
 
             intersection = new Vector2(double.PositiveInfinity, double.PositiveInfinity);
+            angle = 0;
             return false;
         }
 

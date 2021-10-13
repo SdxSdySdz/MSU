@@ -22,6 +22,9 @@ namespace Task1__CR_Localizator
 
         private Stopwatch _stopwatch;
 
+        private Geometry.Rectangle _drawArea;
+        private Color _backgroundColor;
+
         private Pen _testPen;
         private Pen _axesPen;
         private Pen _edgePen;
@@ -32,52 +35,74 @@ namespace Task1__CR_Localizator
         private Brush _cellBrush;
 
 
-        internal MainForm(int iterationMaxCount, Homeomorphism f, Domain domain)
+        internal MainForm(Geometry.Rectangle drawArea, int iterationMaxCount, Homeomorphism f, Domain domain)
         {
-            _stopwatch = new Stopwatch();
+            InitializeComponent();
             InitDrawVariables();
 
+            _stopwatch = new Stopwatch();
+            _drawArea = drawArea;
+            
+
             _domain = domain;
-            _stopwatch.Start();
-            _graph = new SymbolicImageGraph(f, domain);
-            _stopwatch.Stop();
-            Console.WriteLine($"[Time] Constructing graph {_stopwatch.ElapsedMilliseconds}");
+            ConstructGraph(f, domain);
 
             double totalTime = 0;
-            double deletingTime = 0;
-            double splittingTime = 0;
             for (int iterationCount = 0; iterationCount < iterationMaxCount; iterationCount++)
             {
                 Console.WriteLine($"===Iteration {iterationCount + 1}===");
 
-                _stopwatch.Restart();
-                _graph.DeleteNonReturnableNodes();
-                _stopwatch.Stop();
-                deletingTime = _stopwatch.ElapsedMilliseconds;
-                Console.WriteLine($"[Time] Deleting non returnable nodes {deletingTime}");
+                DeleteNonReturnableNodes(out double deletingTime);
 
-                _stopwatch.Restart();
-                _graph = _graph.Splitted();
-                _stopwatch.Stop();
-                splittingTime = _stopwatch.ElapsedMilliseconds;
-                Console.WriteLine($"[Time] Splitting {splittingTime}");
+                SplitGraph(out double splittingTime);
                 _domain = _graph.Domain;
 
-
-                // Console.WriteLine($"[Time] SplittingTime / DeletingTime {splittingTime / deletingTime}\n");
                 totalTime += deletingTime + splittingTime;
             }
 
             Console.WriteLine($"Total time: {totalTime}");
 
 
-            InitializeComponent();
+            
+        }
+
+
+
+        private void ConstructGraph(Homeomorphism f, Domain domain)
+        {
+            _stopwatch.Start();
+            _graph = new SymbolicImageGraph(f, domain);
+            _stopwatch.Stop();
+            Console.WriteLine($"[Time] Constructing graph {_stopwatch.ElapsedMilliseconds / 1000.0}");
+        }
+
+
+        private void DeleteNonReturnableNodes(out double deletingTime)
+        {
+            _stopwatch.Restart();
+            _graph.DeleteNonReturnableNodes();
+            _stopwatch.Stop();
+            deletingTime = _stopwatch.ElapsedMilliseconds;
+            Console.WriteLine($"[Time] Deleting non returnable nodes {deletingTime / 1000.0}");
+        }
+
+
+
+        private void SplitGraph(out double splittingTime)
+        {
+            _stopwatch.Restart();
+            _graph = _graph.Splitted();
+            _stopwatch.Stop();
+            splittingTime = _stopwatch.ElapsedMilliseconds;
+            Console.WriteLine($"[Time] Splitting {splittingTime / 1000.0}");
         }
 
 
         private void InitDrawVariables()
         {
-            var axesColor = Color.FromArgb(45, 64, 89);
+            _backgroundColor = Color.FromArgb(50, 50, 50);
+
+            var axesColor = Color.FromArgb(50, 240, 245, 249);
             var axesPenWidth = 0.01f;
             _axesPen = new Pen(axesColor, axesPenWidth);
 
@@ -85,7 +110,7 @@ namespace Task1__CR_Localizator
             var testPenWidth = 0.01f;
             _testPen = new Pen(testPenColor, testPenWidth);
 
-            var cellColor = Color.Green;
+            var cellColor = Color.FromArgb(234, 221, 41);
             var cellPenWidth = 0.01f;
             _cellPen = new Pen(cellColor, cellPenWidth);
             _cellBrush = new SolidBrush(cellColor);
@@ -103,11 +128,13 @@ namespace Task1__CR_Localizator
 
         private void Canvas_Paint(object sender, PaintEventArgs e)
         {
+            Console.WriteLine("Draw");
+            e.Graphics.Clear(_backgroundColor);
             NormalizeView(e.Graphics);
             
-            // DrawAxes(e.Graphics);
+            DrawAxes(e.Graphics);
 
-            DrawCircle(e.Graphics, _testPen, 0, 0, 1);
+            // DrawCircle(e.Graphics, _testPen, 0, 0, 1);
 
             DrawGraph(e.Graphics);
             // DrawGrid(e.Graphics);
@@ -207,30 +234,25 @@ namespace Task1__CR_Localizator
         private void NormalizeView(Graphics graphics)
         {
             float alpha = Convert.ToSingle(Canvas.Width) / Convert.ToSingle(Canvas.Height);
-            float alphaDomain = Convert.ToSingle(_domain.Width / _domain.Height);
+            float alphaDomain = Convert.ToSingle(_drawArea.Width / _drawArea.Height);
 
-            float targetWidth = Math.Max(alpha, alphaDomain) *  (float)_domain.Height / 2f;
+            float targetWidth = Math.Max(alpha, alphaDomain) *  (float)_drawArea.Height / 2f;
 
             float scale = Canvas.Width / 2f / targetWidth;
 
             graphics.TranslateTransform(Canvas.Width / 2f, Canvas.Height / 2f);
             graphics.ScaleTransform(scale, -scale);
 
-            graphics.TranslateTransform((float)-_domain.Center.x, (float)-_domain.Center.y);
+            graphics.TranslateTransform((float)-_drawArea.Center.x, (float)-_drawArea.Center.y);
         }
 
 
         private void DrawAxes(Graphics graphics)
         {
-            graphics.DrawEllipse(_axesPen, 1 - 2 * 0.01f, 0 - 2 * 0.01f, 2 * 2 * 0.01f, 2 * 2 * 0.01f);
+            float minValue = -10;
+            float maxValue = 10;
 
-            /*            float minValue = (float)Math.Min(_domain.Low.x, _domain.Low.y);
-                        float maxValue = (float)Math.Max(_domain.High.x, _domain.High.y);*/
-
-            float minValue = -5;
-            float maxValue = 5;
-
-             graphics.DrawLine(_axesPen, minValue, 0, maxValue, 0);
+            graphics.DrawLine(_axesPen, minValue, 0, maxValue, 0);
             graphics.DrawLine(_axesPen, 0, minValue, 0, maxValue);
         }
 

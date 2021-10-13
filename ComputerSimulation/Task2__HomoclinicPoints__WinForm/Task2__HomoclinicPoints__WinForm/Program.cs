@@ -17,25 +17,30 @@ namespace Task2__HomoclinicPoints__WinForm
         [STAThread]
         static void Main()
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
+            double minSideLength = 0.001;
+            double eigenvectorLength = 0.1;
 
-            var s1 = new Segment(new Vector2(0, 0), new Vector2(1, 1));
-            var s2 = new Segment(new Vector2(0, 1), new Vector2(1, 0));
-            Console.WriteLine(s1.TryGetIntersectionPoint(s2, out Vector2 i));
 
             Vector2 low = new Vector2(-2, -2);
             Vector2 high = new Vector2(2, 2);
             Rectangle drawArea = new Rectangle(low, high);
 
-            double alpha = 0.4;
+            double alpha = 0.43;
             Diffeomorphism f = new HomeTaskMapping(alpha);
 
-            int maxIterationCount = 30;
+            int maxIterationCount = 20;
 
-            MainForm form = new MainForm(drawArea, f, maxIterationCount);
+            
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
 
-            Application.Run(form);
+            Application.Run(new MainForm(
+                drawArea,
+                f,
+                maxIterationCount,
+                minSideLength,
+                eigenvectorLength
+                ));
         }
     }
 }

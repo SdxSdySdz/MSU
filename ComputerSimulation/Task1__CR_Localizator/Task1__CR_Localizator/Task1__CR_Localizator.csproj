@@ -81,6 +81,7 @@
     <Compile Include="Homeomorphisms\ControlTaskMapping.cs" />
     <Compile Include="Homeomorphisms\Homeomorphism.cs" />
     <Compile Include="Homeomorphisms\IkedaMapping.cs" />
+    <Compile Include="Homeomorphisms\MishaMapping.cs" />
     <Compile Include="Homeomorphisms\QuadraticMapping.cs" />
     <Compile Include="LinearAlgebra\Vector2.cs" />
     <Compile Include="LinearAlgebra\Vector2Int.cs" />
