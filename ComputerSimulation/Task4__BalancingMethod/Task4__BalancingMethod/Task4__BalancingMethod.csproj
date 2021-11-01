@@ -67,7 +67,31 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Program.cs" />
+    <Compile Include="Geometry\Cell.cs" />
+    <Compile Include="Geometry\Domain.cs" />
+    <Compile Include="Geometry\PointSamplers\PointSampler.cs" />
+    <Compile Include="Geometry\PointSamplers\UniformSampler.cs" />
+    <Compile Include="Geometry\Rectangle.cs" />
+    <Compile Include="Graphs\Graph.cs" />
+    <Compile Include="Graphs\Node.cs" />
+    <Compile Include="Graphs\SymbolicImageGraph.cs" />
+    <Compile Include="Graphs\Tools\DomainDensity.cs" />
+    <Compile Include="Graphs\Tools\NodesSubstitution.cs" />
+    <Compile Include="Graphs\Tools\NodeTransformer.cs" />
+    <Compile Include="Graphs\Tools\TopologicalSorter.cs" />
+    <Compile Include="Homeomorphisms\ControlTaskMapping.cs" />
+    <Compile Include="Homeomorphisms\Homeomorphism.cs" />
+    <Compile Include="Homeomorphisms\IkedaMapping.cs" />
+    <Compile Include="Homeomorphisms\MishaMapping.cs" />
+    <Compile Include="Homeomorphisms\QuadraticMapping.cs" />
+    <Compile Include="IterationMethods\BalancingMethod.cs" />
+    <Compile Include="IterationMethods\CRSetLocalizator.cs" />
+    <Compile Include="LinearAlgebra\SparseMatrix.cs" />
+    <Compile Include="LinearAlgebra\Vector2.cs" />
+    <Compile Include="LinearAlgebra\Vector2Int.cs" />
+    <Compile Include="Program.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>

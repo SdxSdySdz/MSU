@@ -7,6 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using OsipLIB.Geometry;
+using OsipLIB.Graphs;
+using OsipLIB.Graphs.Tools;
+using OsipLIB.IterationMethods;
+using OsipLIB.LinearAlgebra;
 using Tao.FreeGlut;
 using Tao.OpenGl;
 
@@ -24,13 +29,21 @@ namespace Task4__BalancingMethod
 
         private double _angle;
 
+        private SymbolicImageGraph _graph;
+        private Domain _domain;
+        private DomainDensity _density;
+        private Color _cellColor;
 
-        public MainForm()
+        internal MainForm(SymbolicImageGraph graph, DomainDensity domainDensity)
         {
             InitializeComponent();
             Canvas.InitializeContexts();
-
+    
             _zoomValue = 1.0;
+            _graph = graph;
+            _domain = graph.Domain;
+            _density = domainDensity;
+
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -56,10 +69,8 @@ namespace Task4__BalancingMethod
 
 
 
+            _cellColor = Color.FromArgb(233, 221, 41);
 
-
-            //Glut.glutWireSphere(2, 32, 32); Gl.glPopMatrix(); Gl.glFlush(); Canvas.Invalidate();
-            
             Draw();
 
             Canvas.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.OnMouseWheel);
@@ -67,6 +78,22 @@ namespace Task4__BalancingMethod
         
 
         private void Draw()
+        {
+            InitDrawingConstants();
+
+            DrawAxes();
+            DrawDensity();
+            DrawBase(_graph);
+            
+
+            Gl.glPopMatrix();
+            Gl.glFlush();
+            Canvas.Invalidate();
+
+            Console.WriteLine("Draw");
+        }
+
+        private void InitDrawingConstants()
         {
             Gl.glClear(Gl.GL_COLOR_BUFFER_BIT | Gl.GL_DEPTH_BUFFER_BIT);
             Gl.glClearColor(32f / 255, 32f / 255, 32f / 255, 1);
@@ -79,53 +106,65 @@ namespace Task4__BalancingMethod
             // Gl.glRotated(45, 1, -1, 0);
             Gl.glRotated(_angle, 0, 0, 1);
             Gl.glScaled(_zoomValue, _zoomValue, _zoomValue);
-
-
-            DrawAxes();
-            DrawDensity();
-            DrawBase();
-
-            Gl.glColor3f(1.0f, 0, 0);
-            Gl.glBegin(Gl.GL_POLYGON);
-            Tao.OpenGl.Gl.glVertex3f(0, 0, 1);
-            Tao.OpenGl.Gl.glVertex3f((float)2, 0, 0);
-            Tao.OpenGl.Gl.glVertex3f(0, 1, 0);
-            Tao.OpenGl.Gl.glEnd();
-
-            Gl.glPopMatrix();
-            Gl.glFlush();
-            Canvas.Invalidate();
-
-            Console.WriteLine("Draw");
         }
-
-
-        private void DrawBase()
-        {
-
-        }
-
-
+        
         private void DrawDensity()
         {
 
+            foreach (var item in _density.Density)
+            {
+                Vector2 point = item.Key;
+                Gl.glColor3f(213f / 255,155f / 255,246f / 255);
+                Tao.OpenGl.Gl.glBegin(Tao.OpenGl.Gl.GL_POINTS);
+                Tao.OpenGl.Gl.glVertex3f((float) point.x, (float) point.y, (float) item.Value);
+                Tao.OpenGl.Gl.glEnd();
+            }
+        }
+        
+        private void DrawBase(SymbolicImageGraph graph)
+        {
+            var cells = graph.GetCells();
+
+            foreach (var cell in cells)
+            {
+                Draw(cell);
+            }
         }
 
-
+        private void Draw(Cell cell)
+        {
+            Draw(cell, 0);
+        }
+        
+        private void Draw(Cell cell, float height)
+        {
+            List<Vector2> vertexes = cell.Vertexes;
+            Gl.glColor3f(_cellColor.R / 255f, _cellColor.G / 255f, _cellColor.B / 255f);
+            Gl.glBegin(Gl.GL_POLYGON);
+            foreach (var vertex in vertexes)
+            {
+                Gl.glVertex3f((float)vertex.x, (float)vertex.y, height);
+            }
+            
+            Gl.glEnd();
+        }
+        
         private void DrawAxes()
         {
             // Gl.glColor3f(1.0f, 0, 0);
-            Gl.glColor3f(201f / 255, 214f / 255, 223f / 255);
+            Gl.glColor3f(235f / 255, 76f / 255, 66f / 255);
             Gl.glBegin(Gl.GL_LINES);
             Tao.OpenGl.Gl.glVertex3f(0, 0, 0);
-            Tao.OpenGl.Gl.glVertex3f(5, 0, 0);
+            Tao.OpenGl.Gl.glVertex3f(1, 0, 0);
             Gl.glEnd();
-
+            
+            Gl.glColor3f(80f / 255, 200f / 255, 120f / 255);
             Gl.glBegin(Gl.GL_LINES);
             Tao.OpenGl.Gl.glVertex3f(0, 0, 0);
             Tao.OpenGl.Gl.glVertex3f(0, 1, 0);
             Gl.glEnd();
-
+            
+            Gl.glColor3f(49f / 255, 140f / 255, 231f / 255);
             Gl.glBegin(Gl.GL_LINES);
             Tao.OpenGl.Gl.glVertex3f(0, 0, 0);
             Tao.OpenGl.Gl.glVertex3f(0, 0, 1);
@@ -136,8 +175,6 @@ namespace Task4__BalancingMethod
         {
             if (e.Button == MouseButtons.Left)
             {
-                
-
                 _isGraphicRotating = true;
                 _rotatingStartPoint = e.Location;
             }
