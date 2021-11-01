@@ -19,26 +19,26 @@ namespace Task1__CR_Localizator
         [STAThread]
         static void Main()
         {
-            int iterationMaxCount = 10;
-            int pointCountInRow = 10;
-            Vector2 low = new Vector2(-5, -50);
-            Vector2 high = new Vector2(5, 50);
+            int iterationMaxCount = 5;
+            int pointCountInRow = 5;
+            Vector2 low = new Vector2(-2.5, -2.5);
+            Vector2 high = new Vector2(2.5, 2.5);
             int rowCount = 33;
             int columnCount = 33;
 
 
             PointSampler pointSampler = new UniformSampler(pointCountInRow, pointCountInRow, 0);
-            // Homeomorphism f = new QuadraticMapping(pointSampler, 0.29, -0.1);
+            Homeomorphism f = new QuadraticMapping(pointSampler, 0.29, -0.1);
             // Homeomorphism f = new QuadraticMapping(pointSampler, -1.0 / Math.PI, 0);
             // Homeomorphism f = new ControlTaskMapping(pointSampler, 1.05, -0.9, 1.2);
-            Homeomorphism f = new MishaMapping(pointSampler);
+            // Homeomorphism f = new MishaMapping(pointSampler);
 
 
             Domain domain = new Domain(low, high, rowCount, columnCount);
 
 
-            low = new Vector2(-5, -5);
-            high = new Vector2(5, 5);
+            low = new Vector2(-2.5, -2.5);
+            high = new Vector2(2.5, 2.5);
             Rectangle drawArea = new Rectangle(low, high);
 
             Application.EnableVisualStyles();

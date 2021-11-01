@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Task1__CR_Localizator.Geometry;
-using Task1__CR_Localizator.Homeomorphisms;
-using Task1__CR_Localizator.LinearAlgebra;
+using OsipLIB.Geometry;
+using OsipLIB.Homeomorphisms;
+using OsipLIB.LinearAlgebra;
 
-namespace Task1__CR_Localizator.Graphs
+namespace OsipLIB.Graphs
 {
     class SymbolicImageGraph : Graph
     {

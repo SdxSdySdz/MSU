@@ -1,0 +1,16 @@
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task3__TopologicalSorting\Task3__TopologicalSorting\bin\Debug\net5.0\Task3__TopologicalSorting.exe
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task3__TopologicalSorting\Task3__TopologicalSorting\bin\Debug\net5.0\Task3__TopologicalSorting.deps.json
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task3__TopologicalSorting\Task3__TopologicalSorting\bin\Debug\net5.0\Task3__TopologicalSorting.runtimeconfig.json
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task3__TopologicalSorting\Task3__TopologicalSorting\bin\Debug\net5.0\Task3__TopologicalSorting.runtimeconfig.dev.json
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task3__TopologicalSorting\Task3__TopologicalSorting\bin\Debug\net5.0\Task3__TopologicalSorting.dll
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task3__TopologicalSorting\Task3__TopologicalSorting\bin\Debug\net5.0\ref\Task3__TopologicalSorting.dll
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task3__TopologicalSorting\Task3__TopologicalSorting\bin\Debug\net5.0\Task3__TopologicalSorting.pdb
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task3__TopologicalSorting\Task3__TopologicalSorting\obj\Debug\net5.0\Task3__TopologicalSorting.csproj.AssemblyReference.cache
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task3__TopologicalSorting\Task3__TopologicalSorting\obj\Debug\net5.0\Task3__TopologicalSorting.GeneratedMSBuildEditorConfig.editorconfig
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task3__TopologicalSorting\Task3__TopologicalSorting\obj\Debug\net5.0\Task3__TopologicalSorting.AssemblyInfoInputs.cache
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task3__TopologicalSorting\Task3__TopologicalSorting\obj\Debug\net5.0\Task3__TopologicalSorting.AssemblyInfo.cs
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task3__TopologicalSorting\Task3__TopologicalSorting\obj\Debug\net5.0\Task3__TopologicalSorting.csproj.CoreCompileInputs.cache
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task3__TopologicalSorting\Task3__TopologicalSorting\obj\Debug\net5.0\Task3__TopologicalSorting.dll
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task3__TopologicalSorting\Task3__TopologicalSorting\obj\Debug\net5.0\ref\Task3__TopologicalSorting.dll
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task3__TopologicalSorting\Task3__TopologicalSorting\obj\Debug\net5.0\Task3__TopologicalSorting.pdb
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task3__TopologicalSorting\Task3__TopologicalSorting\obj\Debug\net5.0\Task3__TopologicalSorting.genruntimeconfig.cache

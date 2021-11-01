@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v5.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v5.0": {
+      "Task3__TopologicalSorting/1.0.0": {
+        "runtime": {
+          "Task3__TopologicalSorting.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Task3__TopologicalSorting/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

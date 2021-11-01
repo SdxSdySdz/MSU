@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Task1__CR_Localizator.LinearAlgebra;
+using OsipLIB.LinearAlgebra;
+using OsipLIB.Graphs;
 
-namespace Task1__CR_Localizator.Graphs
+namespace OsipLIB.Graphs
 {
     class Graph
     {
@@ -78,6 +79,23 @@ namespace Task1__CR_Localizator.Graphs
         }
 
 
+        public List<Vector2Int> ApplyDFS()
+        {
+            List<Vector2Int> result = new List<Vector2Int>();
+
+            List<List<Vector2Int>> components = GetStronglyConnectedComponents();
+            foreach (var component in components)
+            {
+                foreach (var node in component)
+                {
+                    result.Add(node);
+                }
+            }
+
+            return result;
+        }
+
+
         private List<List<Vector2Int>> GetStronglyConnectedComponents()
         {
 
@@ -90,9 +108,7 @@ namespace Task1__CR_Localizator.Graphs
             {
                 if (used.TryGetValue(node, out var value) == false)
                 {
-                    // DFS1(node, ref used, ref order);
-                    // DFS1WithoutRecursion(node, ref used, ref order);
-                    DFS1WithoutRecursion_V2(node, ref used, ref order);
+                    DFSWithoutRecursion(node, ref used, ref order);
                 }
             }
 
@@ -105,8 +121,7 @@ namespace Task1__CR_Localizator.Graphs
 
                 if (used.TryGetValue(node, out var value) == false)
                 {
-                    // DFS2(node, ref graphT, ref used, ref component);
-                    DFS2WithoutRecursion(node, ref graphT, ref used, ref component);
+                    TransposedDFSWithoutRecursion(node, ref graphT, ref used, ref component);
                     components.Add(new List<Vector2Int>(component));
                     component.Clear();
                 }
@@ -194,7 +209,17 @@ namespace Task1__CR_Localizator.Graphs
 
 
         /*** DFS ***/
-        public void DFS1WithoutRecursion_V2(Vector2Int node, ref Dictionary<Vector2Int, bool> used, ref List<Vector2Int> order)
+        public List<Vector2Int> MakeDeepFirstSearch(Vector2Int node)
+        {
+            List<Vector2Int> order = new List<Vector2Int>();
+            Dictionary<Vector2Int, bool> used = new Dictionary<Vector2Int, bool>();
+            DFSWithoutRecursion(node, ref used, ref order);
+
+            return order;
+        }
+
+
+        protected void DFSWithoutRecursion(Vector2Int node, ref Dictionary<Vector2Int, bool> used, ref List<Vector2Int> order)
         {
             Stack<Vector2Int> memory = new Stack<Vector2Int>();
             memory.Push(node);
@@ -233,7 +258,7 @@ namespace Task1__CR_Localizator.Graphs
         }
 
 
-        protected void DFS2WithoutRecursion(Vector2Int node, ref Dictionary<Vector2Int, HashSet<Vector2Int>> graphT, ref Dictionary<Vector2Int, bool> used, ref List<Vector2Int> component)
+        protected void TransposedDFSWithoutRecursion(Vector2Int node, ref Dictionary<Vector2Int, HashSet<Vector2Int>> graphT, ref Dictionary<Vector2Int, bool> used, ref List<Vector2Int> component)
         {
             Stack<Vector2Int> memory = new Stack<Vector2Int>();
             memory.Push(node);
@@ -245,8 +270,17 @@ namespace Task1__CR_Localizator.Graphs
                 allUsed = true;
                 currentNode = memory.Peek();
 
-                component.Add(currentNode);
-                used[currentNode] = true;
+
+
+                // component.Add(currentNode);
+
+                if (used.TryGetValue(currentNode, out var _) == false)
+                {
+                    component.Add(currentNode);
+                    used[currentNode] = true;
+                }
+                
+                
 
                 HashSet<Vector2Int> remainingOutNodes = graphT[currentNode];
 
