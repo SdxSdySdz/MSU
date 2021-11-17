@@ -20,7 +20,7 @@ namespace Task7__CR_Set_In_Projective_Space
         {
             Console.WriteLine("Run");
             
-            int iterationMaxCount = 7;
+            int iterationMaxCount = 11;
             int pointCountInRow = 10;
             Vector2 low = new Vector2(0, 0);
             Vector2 high = new Vector2(6, 2);
@@ -29,9 +29,9 @@ namespace Task7__CR_Set_In_Projective_Space
 
             double[,] matrixArray =
             {
-                {1, -2, 1},
-                {0, 3, 3},
-                {-1, 2, 1},
+                {3, 0, 0},
+                {2, 2, 5},
+                {0, 0, 3},
             };
             Matrix3x3 matrix = new Matrix3x3(matrixArray);
 
@@ -41,8 +41,8 @@ namespace Task7__CR_Set_In_Projective_Space
             Domain domain = new Domain(low, high, rowCount, columnCount);
 
 
-            low = new Vector2(-1, -1);
-            high = new Vector2(6, 3);
+            low = new Vector2(0, 0);
+            high = new Vector2(6, 2);
             Rectangle drawArea = new Rectangle(low, high);
             
             

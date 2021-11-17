@@ -7,7 +7,22 @@ namespace OsipLIB.LinearAlgebra
         private readonly int _rowCount;
         private readonly int _columnCount;
         private double[,] _matrix;
-    
+
+        public static Matrix3x3 Eye
+        {
+            get
+            {
+                double[,] matrix = new double[,]
+                {
+                    {1, 0, 0},
+                    {0, 1, 0},
+                    {0, 0, 1},
+                };
+
+                return new Matrix3x3(matrix);
+            }
+        }
+        
         public double this[int row, int column]
         {
             get => _matrix[row, column];

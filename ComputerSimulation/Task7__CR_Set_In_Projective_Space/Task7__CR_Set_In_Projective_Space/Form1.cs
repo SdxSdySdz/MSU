@@ -130,11 +130,13 @@ namespace Task7__CR_Set_In_Projective_Space
             e.Graphics.Clear(_backgroundColor);
             NormalizeView(e.Graphics);
 
-            DrawAxes(e.Graphics);
+            // DrawAxes(e.Graphics);
 
             // DrawCircle(e.Graphics, _testPen, 0, 0, 1);
 
             DrawGraph(e.Graphics);
+
+            DrawProjectiveSpace(e.Graphics);
             // DrawGrid(e.Graphics);
         }
 
@@ -179,7 +181,7 @@ namespace Task7__CR_Set_In_Projective_Space
             }
         }
 
-
+        
         private void DrawCell(Graphics graphics, Cell cell)
         {
             var size = cell.Size;
@@ -228,6 +230,18 @@ namespace Task7__CR_Set_In_Projective_Space
             graphics.DrawLine(_gridPen, (float)_domain.MaxX, (float)_domain.MinY, (float)_domain.MaxX, (float)_domain.MaxY);
         }
 
+        private void DrawProjectiveSpace(Graphics graphics)
+        {
+            Pen pen = new Pen(Color.Red);
+            pen.Width = 0.001f;
+            
+            pen.Color = Color.Red;
+            graphics.DrawRectangle(pen, 0, 0, 2, 2);
+            pen.Color = Color.Lime;
+            graphics.DrawRectangle(pen, 2 + 2*pen.Width, 0, 2, 2);
+            pen.Color = Color.Blue;
+            graphics.DrawRectangle(pen, 4, 0, 2, 2);
+        }
 
         private void NormalizeView(Graphics graphics)
         {
