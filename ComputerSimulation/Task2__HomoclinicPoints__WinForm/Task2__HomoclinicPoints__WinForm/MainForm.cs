@@ -20,8 +20,7 @@ namespace Task2__HomoclinicPoints__WinForm
     public partial class MainForm : Form
     {
         private Geometry.Rectangle _drawArea;
-
-        private Stopwatch _stopwatch;
+        private Vector2 _intersectionPoint;
 
         private Color _backgroundColor;
         private Pen _testPen;
@@ -33,6 +32,8 @@ namespace Task2__HomoclinicPoints__WinForm
         private Polyline _stableCurve;
         private Polyline _unstableCurve;
 
+        private bool AreAllInputsCorrect => TryParseAllInputs(out double alpha, out double eigenvectorLength, out int maxIterationCount, out double minSideLength);
+        private bool IsDrawingAvailable => _stableCurve != null && _unstableCurve != null && AreAllInputsCorrect;
 
         internal MainForm(
             Geometry.Rectangle domain, 
@@ -44,11 +45,8 @@ namespace Task2__HomoclinicPoints__WinForm
         {
             InitializeComponent();
 
-            _stopwatch = new Stopwatch();
             InitDrawVariables();
             _drawArea = domain;
-            
-            TryCalculate();
         }
 
         private void TryCalculate()
@@ -72,6 +70,8 @@ namespace Task2__HomoclinicPoints__WinForm
             Console.WriteLine(f.MaxEigenvector);
             Console.WriteLine(f.MinEigenvector);
 
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
             /*** SOLVING STABLE CURVE ***/
             Segment stableSegment = new Segment(f.MaxEigenvector * eigenvectorLength);
             _stableCurve = curveIterator.Solve(stableSegment, IterationDirection.Positive);
@@ -79,6 +79,20 @@ namespace Task2__HomoclinicPoints__WinForm
             /*** SOLVING UNSTABLE CURVE ***/
             Segment unstableSegment = new Segment(f.MinEigenvector * eigenvectorLength);
             _unstableCurve = curveIterator.Solve(unstableSegment, IterationDirection.Negative);
+
+            double iterationTime = stopwatch.ElapsedMilliseconds / 1000.0;
+
+            if (_stableCurve.TryGetFirstIntersectionPoint(_unstableCurve, out Vector2 intersectionPoint, out double angle))
+            {
+                _intersectionPoint = intersectionPoint;
+            }
+            else
+            {
+                _intersectionPoint = new Vector2(-100, -100);
+            }
+
+            double totalTime = stopwatch.ElapsedMilliseconds / 1000.0;
+            TimeTextBox.Text = $"{totalTime} ({iterationTime})";
         }
 
         private bool TryParseDoubleInput(TextBox input, out double result)
@@ -138,7 +152,7 @@ namespace Task2__HomoclinicPoints__WinForm
 
         private void Canvas_Paint(object sender, PaintEventArgs e)
         {
-            if (TryParseAllInputs(out double alpha, out double eigenvectorLength, out int maxIterationCount, out double minSideLength) == false) return;
+            if (IsDrawingAvailable == false) return;
 
             e.Graphics.Clear(_backgroundColor);
             NormalizeView(e.Graphics);
@@ -149,12 +163,9 @@ namespace Task2__HomoclinicPoints__WinForm
             DrawPolyline(e.Graphics, _stableCurve, _stableCurvePen);
             DrawPolyline(e.Graphics, _unstableCurve, _unstableCurvePen);
 
-            if (_stableCurve.TryGetFirstIntersectionPoint(_unstableCurve, out Vector2 intersectionPoint, out double angle))
-            {
-                Console.WriteLine($"[Intersection point] {intersectionPoint} [Angle] {angle}");
-                FillCircle(e.Graphics, _intersectionPointBrush, (float)intersectionPoint.x, (float)intersectionPoint.y, 0.02f);
+            FillCircle(e.Graphics, _intersectionPointBrush, (float)_intersectionPoint.x, (float)_intersectionPoint.y, 0.02f);
                 // DrawCircle(e.Graphics, _axesPen, (float)intersectionPoint.x, (float)intersectionPoint.y, 0.1f);
-            }
+
 
             // FillCircle(e.Graphics, _intersectionPointBrush, (float)1.1050348915755, (float)-0.353424112723881, 0.02f);
         }
