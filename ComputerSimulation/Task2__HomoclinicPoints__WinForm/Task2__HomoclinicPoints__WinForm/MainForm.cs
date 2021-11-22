@@ -13,6 +13,7 @@ using Task2__HomoclinicPoints__WinForm.Geometry;
 using Task2__HomoclinicPoints__WinForm.LinearAlgebra;
 using Task2__HomoclinicPoints__WinForm.CurveIteration;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace Task2__HomoclinicPoints__WinForm
 {
@@ -29,7 +30,6 @@ namespace Task2__HomoclinicPoints__WinForm
         private Pen _unstableCurvePen;
         private Brush _intersectionPointBrush;
 
-        private double _eigenvectorLength;
         private Polyline _stableCurve;
         private Polyline _unstableCurve;
 
@@ -47,8 +47,25 @@ namespace Task2__HomoclinicPoints__WinForm
             _stopwatch = new Stopwatch();
             InitDrawVariables();
             _drawArea = domain;
-            _eigenvectorLength = eigenvectorLength;
+            
+            TryCalculate();
+        }
 
+        private void TryCalculate()
+        {
+            if (TryParseAllInputs(out double alpha, out double eigenvectorLength, out int maxIterationCount, out double minSideLength))
+            {
+                Calculate(alpha, eigenvectorLength, maxIterationCount, minSideLength);
+            }
+            else
+            {
+                MessageBox.Show("Incorrect input");
+            }
+        }
+
+        private void Calculate(double alpha, double eigenvectorLength, int maxIterationCount, double minSideLength)
+        {
+            Diffeomorphism f = new HomeTaskMapping(alpha);
 
             CurveIterator curveIterator = new CurveIterator(f, maxIterationCount, minSideLength);
 
@@ -56,14 +73,43 @@ namespace Task2__HomoclinicPoints__WinForm
             Console.WriteLine(f.MinEigenvector);
 
             /*** SOLVING STABLE CURVE ***/
-            Segment stableSegment = new Segment(f.MaxEigenvector * _eigenvectorLength);
+            Segment stableSegment = new Segment(f.MaxEigenvector * eigenvectorLength);
             _stableCurve = curveIterator.Solve(stableSegment, IterationDirection.Positive);
 
             /*** SOLVING UNSTABLE CURVE ***/
-            Segment unstableSegment = new Segment(f.MinEigenvector * _eigenvectorLength);
+            Segment unstableSegment = new Segment(f.MinEigenvector * eigenvectorLength);
             _unstableCurve = curveIterator.Solve(unstableSegment, IterationDirection.Negative);
         }
 
+        private bool TryParseDoubleInput(TextBox input, out double result)
+        {
+            string value = input.Text;
+
+            if (!double.TryParse(value, NumberStyles.Any, CultureInfo.CurrentCulture, out result) &&
+                !double.TryParse(value, NumberStyles.Any, CultureInfo.GetCultureInfo("en-US"), out result) &&
+                !double.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out result))
+            {
+                result = double.NaN;
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool TryParsePositiveIntInput(TextBox input, out int result)
+        {
+            return int.TryParse(input.Text, out result) && result > 0;
+        }
+
+        private void OnCorrectUserInput(TextBox input)
+        {
+            input.ForeColor = Color.Black;
+        }
+
+        private void OnIncorrectUserInput(TextBox input)
+        {
+            input.ForeColor = Color.Red;
+        }
 
         private void InitDrawVariables()
         {
@@ -92,6 +138,8 @@ namespace Task2__HomoclinicPoints__WinForm
 
         private void Canvas_Paint(object sender, PaintEventArgs e)
         {
+            if (TryParseAllInputs(out double alpha, out double eigenvectorLength, out int maxIterationCount, out double minSideLength) == false) return;
+
             e.Graphics.Clear(_backgroundColor);
             NormalizeView(e.Graphics);
 
@@ -101,14 +149,14 @@ namespace Task2__HomoclinicPoints__WinForm
             DrawPolyline(e.Graphics, _stableCurve, _stableCurvePen);
             DrawPolyline(e.Graphics, _unstableCurve, _unstableCurvePen);
 
-            /*if (_stableCurve.TryGetFirstIntersectionPoint(_unstableCurve, out Vector2 intersectionPoint, out double angle))
+            if (_stableCurve.TryGetFirstIntersectionPoint(_unstableCurve, out Vector2 intersectionPoint, out double angle))
             {
-                Console.WriteLine($"[Eigenvector length] {_eigenvectorLength} [Intersection point] {intersectionPoint} [Angle] {angle}");
+                Console.WriteLine($"[Intersection point] {intersectionPoint} [Angle] {angle}");
                 FillCircle(e.Graphics, _intersectionPointBrush, (float)intersectionPoint.x, (float)intersectionPoint.y, 0.02f);
                 // DrawCircle(e.Graphics, _axesPen, (float)intersectionPoint.x, (float)intersectionPoint.y, 0.1f);
-            }*/
+            }
 
-            FillCircle(e.Graphics, _intersectionPointBrush, (float)1.1050348915755, (float)-0.353424112723881, 0.02f);
+            // FillCircle(e.Graphics, _intersectionPointBrush, (float)1.1050348915755, (float)-0.353424112723881, 0.02f);
         }
 
 
@@ -155,15 +203,73 @@ namespace Task2__HomoclinicPoints__WinForm
             graphics.FillEllipse(brush, centerX - radius, centerY - radius, 2 * radius, 2 * radius);
         }
 
-
-        private void ScaleBar_ValueChanged(object sender, EventArgs e)
+        private bool TryParseAllInputs(out double alpha, out double eigenvectorLength, out int maxIterationCount, out double minSideLength)
         {
-/*            float scale = (float)ScaleBar.Value / (ScaleBar.Maximum - ScaleBar.Minimum);
+            bool[] conditions = new[]
+            {
+                TryParseDoubleInput(AlphaInput, out alpha),
+                TryParseDoubleInput(EigenVectorLengthInput, out eigenvectorLength),
+                TryParsePositiveIntInput(IterationCountInput, out maxIterationCount),
+                TryParseDoubleInput(MinSideLengthInput, out minSideLength)
+            };
 
-            if (_polyline != null)
-                Draw(scale, _minRightEdgeValue, _maxRightEdgeValue);*/
+            foreach (var condition in conditions)
+            {
+                if (condition == false)
+                    return false;
+            }
 
+            return true;
+        }
 
+        private void ProcessDoubleInput(TextBox input)
+        {
+            if (TryParseDoubleInput(input, out double value))
+            {
+                OnCorrectUserInput(input);
+            }
+            else
+            {
+                OnIncorrectUserInput(input);
+            }
+        }
+
+        private void ProcessIntInput(TextBox input)
+        {
+            if (TryParsePositiveIntInput(input, out var _))
+            {
+                OnCorrectUserInput(input);
+            }
+            else
+            {
+                OnIncorrectUserInput(input);
+            }
+        }
+
+        private void AlphaInput_TextChanged(object sender, EventArgs e)
+        {
+            ProcessDoubleInput(AlphaInput);
+        }
+
+        private void IterationCountInput_TextChanged(object sender, EventArgs e)
+        {
+            ProcessIntInput(EigenVectorLengthInput);
+        }
+
+        private void MinSideLengthInput_TextChanged(object sender, EventArgs e)
+        {
+            ProcessDoubleInput(MinSideLengthInput);
+        }
+
+        private void CalculationButton_Click(object sender, EventArgs e)
+        {
+            TryCalculate();
+            Canvas.Invalidate();
+        }
+
+        private void EigenVectorLengthInput_TextChanged(object sender, EventArgs e)
+        {
+            ProcessDoubleInput(EigenVectorLengthInput);
         }
     }
 }

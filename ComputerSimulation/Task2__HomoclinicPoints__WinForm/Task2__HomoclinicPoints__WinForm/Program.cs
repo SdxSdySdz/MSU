@@ -28,7 +28,7 @@ namespace Task2__HomoclinicPoints__WinForm
             double alpha = 0.43;
             Diffeomorphism f = new HomeTaskMapping(alpha);
 
-            int maxIterationCount = 20;
+            int maxIterationCount = 5;
 
             
             Application.EnableVisualStyles();
