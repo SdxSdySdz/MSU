@@ -370,6 +370,7 @@ namespace Task1__CR_Localizator
             }
 
             Console.WriteLine($"Total time: {totalTime}");
+            TimeTextBox.Text = (totalTime / 1000.0).ToString();
         }
     }
 }
