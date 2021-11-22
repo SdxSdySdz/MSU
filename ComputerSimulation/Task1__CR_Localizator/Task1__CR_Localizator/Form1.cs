@@ -4,11 +4,13 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Task1__CR_Localizator.Geometry;
+using Task1__CR_Localizator.Geometry.PointSamplers;
 using Task1__CR_Localizator.Graphs;
 using Task1__CR_Localizator.Homeomorphisms;
 using Task1__CR_Localizator.LinearAlgebra;
@@ -34,36 +36,28 @@ namespace Task1__CR_Localizator
         private Brush _edgeBrush;
         private Brush _cellBrush;
 
+        private Dictionary<TextBox, bool> _inputValidities;
 
         internal MainForm(Geometry.Rectangle drawArea, int iterationMaxCount, Homeomorphism f, Domain domain)
         {
             InitializeComponent();
             InitDrawVariables();
 
+            _inputValidities = new Dictionary<TextBox, bool>
+            {
+                {ReInput, false},
+                {ImInput, false},
+            };
+
             _stopwatch = new Stopwatch();
             _drawArea = drawArea;
             
 
             _domain = domain;
-            ConstructGraph(f, domain);
-
-            double totalTime = 0;
-            for (int iterationCount = 0; iterationCount < iterationMaxCount; iterationCount++)
-            {
-                Console.WriteLine($"===Iteration {iterationCount + 1}===");
-
-                DeleteNonReturnableNodes(out double deletingTime);
-
-                SplitGraph(out double splittingTime);
-                _domain = _graph.Domain;
-
-                totalTime += deletingTime + splittingTime;
-            }
-
-            Console.WriteLine($"Total time: {totalTime}");
 
 
-            
+
+            TryCalculate();
         }
 
 
@@ -128,6 +122,8 @@ namespace Task1__CR_Localizator
 
         private void Canvas_Paint(object sender, PaintEventArgs e)
         {
+            if (_graph == null) return;
+
             Console.WriteLine("Draw");
             e.Graphics.Clear(_backgroundColor);
             NormalizeView(e.Graphics);
@@ -259,6 +255,121 @@ namespace Task1__CR_Localizator
         private void DrawCircle(Graphics graphics, Pen pen, float centerX, float centerY, float radius)
         {
             graphics.DrawEllipse(pen, centerX - radius, centerY - radius, 2 * radius, 2 * radius);
+        }
+
+        private void ReInput_TextChanged(object sender, EventArgs e)
+        {
+            ProcessMappingParameterInput(ReInput);
+        }
+
+        private void ImInput_TextChanged(object sender, EventArgs e)
+        {
+            ProcessMappingParameterInput(ImInput);
+        }
+
+        private void IterationCountInput_TextChanged(object sender, EventArgs e)
+        {
+            if (int.TryParse(IterationCountInput.Text, out int maxIterationCount) && maxIterationCount > 0)
+            {
+                OnCorrectUserInput(IterationCountInput);
+            }
+            else
+            {
+                OnIncorrectUserInput(IterationCountInput);
+            }
+        }
+
+        private void ProcessMappingParameterInput(TextBox input)
+        {
+            if (TryParseInput(input, out double value))
+            {
+                OnCorrectUserInput(input);
+            }
+            else
+            {
+                OnIncorrectUserInput(input);
+            }
+        }
+
+        private bool TryParseInput(TextBox input, out double result)
+        {
+            string value = input.Text;
+
+            if (!double.TryParse(value, NumberStyles.Any, CultureInfo.CurrentCulture, out result) &&
+                !double.TryParse(value, NumberStyles.Any, CultureInfo.GetCultureInfo("en-US"), out result) &&
+                !double.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out result))
+            {
+                result = double.NaN;
+                return false;
+            }
+
+            return true;
+        }
+
+        private void OnCorrectUserInput(TextBox input)
+        {
+            _inputValidities[input] = true;
+            input.ForeColor = Color.Black;
+        }
+
+        private void OnIncorrectUserInput(TextBox input)
+        {
+            _inputValidities[input] = false;
+            input.ForeColor = Color.Red;
+        }
+
+        private void CalculationButton_Click(object sender, EventArgs e)
+        {
+            TryCalculate();
+        }
+
+
+        private void TryCalculate()
+        {
+            if (TryParseInput(IterationCountInput, out double maxIterationCount) && 
+                TryParseInput(ReInput, out double re) && 
+                TryParseInput(ImInput, out double im)
+                )
+            {
+                Calculate((int)maxIterationCount, re, im);
+                NodesCountTextBox.Text = _graph.NodesCount.ToString();
+                Canvas.Invalidate();
+            }
+            else
+            {
+                MessageBox.Show("Incorrect input");
+            }
+        }
+
+        private void Calculate(int iterationMaxCount, double re, double im)
+        {
+            int pointCountInRow = 5;
+            Vector2 low = new Vector2(-2.5, -2.5);
+            Vector2 high = new Vector2(2.5, 2.5);
+            int rowCount = 33;
+            int columnCount = 33;
+
+            PointSampler pointSampler = new UniformSampler(pointCountInRow, pointCountInRow, 0.01);
+            Homeomorphism f = new QuadraticMapping(pointSampler, re, im);
+
+            _domain = new Domain(low, high, rowCount, columnCount);
+
+            ConstructGraph(f, _domain);
+
+            double totalTime = 0;
+            for (int iterationCount = 0; iterationCount < iterationMaxCount; iterationCount++)
+            {
+                Console.WriteLine($"===Iteration {iterationCount + 1}===");
+
+                DeleteNonReturnableNodes(out double deletingTime);
+
+                SplitGraph(out double splittingTime);
+                _domain = _graph.Domain;
+
+                totalTime += deletingTime + splittingTime;
+            }
+
+            Console.WriteLine($"Total time: {totalTime}");
         }
     }
 }
