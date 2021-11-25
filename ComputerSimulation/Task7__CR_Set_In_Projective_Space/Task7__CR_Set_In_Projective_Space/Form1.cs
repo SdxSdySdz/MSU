@@ -1,10 +1,13 @@
 ﻿using OsipLIB.Geometry;
+using OsipLIB.Geometry.PointSamplers;
 using OsipLIB.Graphs;
 using OsipLIB.LinearAlgebra;
 using OsipLIB.Mappings;
 using System;
 using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Task7__CR_Set_In_Projective_Space
@@ -28,6 +31,8 @@ namespace Task7__CR_Set_In_Projective_Space
         private Brush _edgeBrush;
         private Brush _cellBrush;
 
+        private bool AreAllInputsCorrect => TryParseAllInputs(out var _, out var __);
+        private bool IsDrawingAvailable => AreAllInputsCorrect && _graph != null;
 
         internal MainForm(OsipLIB.Geometry.Rectangle drawArea, int iterationMaxCount, Mapping f, Domain domain)
         {
@@ -40,12 +45,105 @@ namespace Task7__CR_Set_In_Projective_Space
             _drawArea = drawArea;
 
 
-            _domain = domain;
-            ConstructGraph(f, domain);
+
+            TryCalculate();
+        }
+
+        private void TryCalculate()
+        {
+            if (TryParseAllInputs(out Matrix3x3 matrix, out int maxIterationCount))
+            {
+                Calculate(matrix, maxIterationCount);
+                Canvas.Invalidate();
+            }
+            else
+            {
+                MessageBox.Show("Incorrect input");
+            }
+        }
+
+        private bool TryParseAllInputs(out Matrix3x3 matrix, out int maxIterationCount)
+        {
+            bool[] conditions = new[]
+            {
+                TryParseMatrix(out matrix),
+                TryParsePositiveIntInput(IterationCountInput, out maxIterationCount),
+            };
+
+            foreach (var condition in conditions)
+            {
+                if (condition == false)
+                    return false;
+            }
+
+            return true;
+        }
+
+        private bool TryParseMatrix(out Matrix3x3 matrix)
+        {
+            bool[] condition = new bool[]
+            {
+                TryParseDoubleInput(matrix00TextBox, out double mx00),
+                TryParseDoubleInput(matrix01TextBox, out double mx01),
+                TryParseDoubleInput(matrix02TextBox, out double mx02),
+                TryParseDoubleInput(matrix10TextBox, out double mx10),
+                TryParseDoubleInput(matrix11TextBox, out double mx11),
+                TryParseDoubleInput(matrix12TextBox, out double mx12),
+                TryParseDoubleInput(matrix20TextBox, out double mx20),
+                TryParseDoubleInput(matrix21TextBox, out double mx21),
+                TryParseDoubleInput(matrix22TextBox, out double mx22),
+            };
+
+            double[,] mx = new double[3, 3]
+            {
+                { mx00, mx01, mx02},
+                { mx10, mx11, mx12},
+                { mx20, mx21, mx22},
+            };
+
+            matrix = new Matrix3x3(mx);
+
+            return condition.All(condition => condition == true);
+        }
+
+        private bool TryParseDoubleInput(TextBox input, out double result)
+        {
+            string value = input.Text;
+
+            if (!double.TryParse(value, NumberStyles.Any, CultureInfo.CurrentCulture, out result) &&
+                !double.TryParse(value, NumberStyles.Any, CultureInfo.GetCultureInfo("en-US"), out result) &&
+                !double.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out result))
+            {
+                result = double.NaN;
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool TryParsePositiveIntInput(TextBox input, out int result)
+        {
+            return int.TryParse(input.Text, out result) && result > 0;
+        }
+
+        private void Calculate(Matrix3x3 matrix, int maxIterationCount)
+        {
+            Vector2 low = new Vector2(0, 0);
+            Vector2 high = new Vector2(6, 2);
+            int rowCount = 1;
+            int columnCount = 3 * rowCount;
+
+            int pointCountInRow = 10;
+            PointSampler pointSampler = new UniformSampler(pointCountInRow, pointCountInRow, 0.01);
+
+            Mapping f = new ProjectiveSpaceMapping(pointSampler, matrix);
+            _domain = new Domain(low, high, rowCount, columnCount);
+
+            ConstructGraph(f, _domain);
 
             double totalTime = 0;
             int iterationCount = 0;
-            for (iterationCount = 0; iterationCount < iterationMaxCount; iterationCount++)
+            for (iterationCount = 0; iterationCount < maxIterationCount; iterationCount++)
             {
                 Console.WriteLine($"===Iteration {iterationCount + 1}===");
 
@@ -59,11 +157,7 @@ namespace Task7__CR_Set_In_Projective_Space
 
             Console.WriteLine($"Total time: {totalTime}");
 
-
-
         }
-
-
 
         private void ConstructGraph(Mapping f, Domain domain)
         {
@@ -74,7 +168,6 @@ namespace Task7__CR_Set_In_Projective_Space
             Console.WriteLine($"[Time] Constructing graph {_stopwatch.ElapsedMilliseconds / 1000.0}");
         }
 
-
         private void DeleteNonReturnableNodes(out double deletingTime)
         {
             _stopwatch.Restart();
@@ -83,8 +176,6 @@ namespace Task7__CR_Set_In_Projective_Space
             deletingTime = _stopwatch.ElapsedMilliseconds;
             Console.WriteLine($"[Time] Deleting non returnable nodes {deletingTime / 1000.0}");
         }
-
-
 
         private void SplitGraph(out double splittingTime)
         {
@@ -126,6 +217,8 @@ namespace Task7__CR_Set_In_Projective_Space
 
         private void Canvas_Paint(object sender, PaintEventArgs e)
         {
+            if (IsDrawingAvailable == false) return;
+
             Console.WriteLine("Draw");
             e.Graphics.Clear(_backgroundColor);
             NormalizeView(e.Graphics);
@@ -273,18 +366,54 @@ namespace Task7__CR_Set_In_Projective_Space
             graphics.DrawEllipse(pen, centerX - radius, centerY - radius, 2 * radius, 2 * radius);
         }
 
-        private void Canvas_Paint_1(object sender, PaintEventArgs e)
+        private void matrix00TextBox_TextChanged(object sender, EventArgs e)
         {
-            Console.WriteLine("Draw");
-            e.Graphics.Clear(_backgroundColor);
-            NormalizeView(e.Graphics);
 
-            DrawAxes(e.Graphics);
+        }
 
-            // DrawCircle(e.Graphics, _testPen, 0, 0, 1);
+        private void matrix01TextBox_TextChanged(object sender, EventArgs e)
+        {
 
-            DrawGraph(e.Graphics);
-            // DrawGrid(e.Graphics);
+        }
+
+        private void matrix02TextBox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void matrix10TextBox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void matrix11TextBox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void matrix12TextBox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void matrix20TextBox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void matrix21TextBox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void matrix22TextBox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void CalculationButton_Click(object sender, EventArgs e)
+        {
+            TryCalculate();
         }
     }
 }

@@ -18,10 +18,8 @@ namespace Task7__CR_Set_In_Projective_Space
         [STAThread]
         static void Main()
         {
-            Console.WriteLine("Run");
-            
-            int iterationMaxCount = 11;
-            int pointCountInRow = 10;
+            int iterationMaxCount = 9;
+            int pointCountInRow = 50;
             Vector2 low = new Vector2(0, 0);
             Vector2 high = new Vector2(6, 2);
             int rowCount = 1;
@@ -29,9 +27,9 @@ namespace Task7__CR_Set_In_Projective_Space
 
             double[,] matrixArray =
             {
-                {3, 0, 0},
-                {2, 2, 5},
-                {0, 0, 3},
+                {1, 3, -1},
+                {1, 0, 1},
+                {1, 3, 1},
             };
             Matrix3x3 matrix = new Matrix3x3(matrixArray);
 
@@ -44,7 +42,6 @@ namespace Task7__CR_Set_In_Projective_Space
             low = new Vector2(0, 0);
             high = new Vector2(6, 2);
             Rectangle drawArea = new Rectangle(low, high);
-            
             
             
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
