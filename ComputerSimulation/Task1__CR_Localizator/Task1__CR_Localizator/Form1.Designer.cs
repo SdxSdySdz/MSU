@@ -232,7 +232,7 @@ namespace Task1__CR_Localizator
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 73.62205F));
             this.tableLayoutPanel3.Controls.Add(this.label2, 0, 0);
             this.tableLayoutPanel3.Controls.Add(this.TimeTextBox, 1, 0);
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(1042, 304);
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(1042, 345);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 1;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
