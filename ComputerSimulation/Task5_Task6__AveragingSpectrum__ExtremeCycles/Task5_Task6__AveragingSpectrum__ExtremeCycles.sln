@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31410.357
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Task5_Task6__AveragingSpectrum__ExtremeCycles", "Task5_Task6__AveragingSpectrum__ExtremeCycles\Task5_Task6__AveragingSpectrum__ExtremeCycles.csproj", "{B71C8409-E02F-4FFB-9DB0-4BE46F5EFA97}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B71C8409-E02F-4FFB-9DB0-4BE46F5EFA97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B71C8409-E02F-4FFB-9DB0-4BE46F5EFA97}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B71C8409-E02F-4FFB-9DB0-4BE46F5EFA97}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B71C8409-E02F-4FFB-9DB0-4BE46F5EFA97}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {32AB962E-C853-452B-B9F6-CF7FF9EF0CDA}
+	EndGlobalSection
+EndGlobal
