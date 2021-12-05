@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "U+kx6TpMeNRjmfskfkuiqTxp7f4b55Xi9ZLtqw9uGw9oTLc6JDBgdHBfP/srd9Qk5o0KV/7pd9smV2sPHG4oAA==",
+  "dgSpecHash": "S0HxSyhCFG1Lu+K2kyRDlszrxmtrucBfom386fySdCPliEuI6lTX9sTDkWt2i7T42ZvSVcprGiECIo4JGDKTrQ==",
   "success": true,
   "projectFilePath": "D:\\Progs\\MSU_git\\MSU\\ComputerSimulation\\Task3__TopologicalSorting\\Task3__TopologicalSorting\\Task3__TopologicalSorting.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\Admin\\.nuget\\packages\\stylecop.analyzers\\1.1.118\\stylecop.analyzers.1.1.118.nupkg.sha512"
+  ],
   "logs": []
 }

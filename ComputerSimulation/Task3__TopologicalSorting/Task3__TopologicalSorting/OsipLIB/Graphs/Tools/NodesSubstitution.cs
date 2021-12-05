@@ -1,17 +1,13 @@
-﻿using OsipLIB.Graphs;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OsipLIB.Graphs.Tools
 {
-    class NodesSubstitution : IEnumerable<(INode PreviousNode, INode NewNode)>
+    public class NodesSubstitution : IEnumerable<(INode PreviousNode, INode NewNode)>
     {
         private Dictionary<INode, INode> _substitution;
-
 
         public NodesSubstitution(IEnumerable<INode> previousNodes, IEnumerable<INode> newNodes)
         {
@@ -31,10 +27,9 @@ namespace OsipLIB.Graphs.Tools
             Match(previousNodes.ToList(), newNodes.ToList());
         }
 
-
         public override string ToString()
         {
-            string result = "";
+            string result = string.Empty;
             foreach (var item in _substitution)
             {
                 result += $"{item.Key} -> {item.Value}\n";
@@ -42,7 +37,6 @@ namespace OsipLIB.Graphs.Tools
 
             return result;
         }
-
 
         public IEnumerator<(INode PreviousNode, INode NewNode)> GetEnumerator()
         {
@@ -52,12 +46,10 @@ namespace OsipLIB.Graphs.Tools
             }
         }
 
-
         IEnumerator IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();
         }
-
 
         private void Match(List<INode> previousNodes, List<INode> newNodes)
         {

@@ -7,20 +7,11 @@ using OsipLIB.Graphs;
 
 namespace OsipLIB.LinearAlgebra
 {
-    struct Vector2Int : INode
+    public struct Vector2Int : INode
     {
-        public int x { get; private set; }
-        public int y { get; private set; }
-        public int Row => x;
-        public int Column => y;
-        
-        public static Vector2Int Zero => new Vector2Int(0, 0);
-        public static Vector2Int One => new Vector2Int(1, 1);
-        public static Vector2Int Up => new Vector2Int(0, 1);
-        public static Vector2Int Down => new Vector2Int(0, -1);
-        public static Vector2Int Right => new Vector2Int(1, 0);
-        public static Vector2Int Left => new Vector2Int(-1, 0);
-        
+        public Vector2Int(Vector2Int vector) : this(vector.x, vector.y) 
+        {
+        }
 
         public Vector2Int(int x, int y)
         {
@@ -28,20 +19,39 @@ namespace OsipLIB.LinearAlgebra
             this.y = y;
         }
 
+        public static Vector2Int Zero => new Vector2Int(0, 0);
 
-        public Vector2Int(Vector2Int vector) : this(vector.x, vector.y) { }
+        public static Vector2Int One => new Vector2Int(1, 1);
 
-        
+        public static Vector2Int Up => new Vector2Int(0, 1);
+
+        public static Vector2Int Down => new Vector2Int(0, -1);
+
+        public static Vector2Int Right => new Vector2Int(1, 0);
+
+        public static Vector2Int Left => new Vector2Int(-1, 0);
+
+        public int x { get; private set; }
+
+        public int y { get; private set; }
+
+        public int Row => x;
+
+        public int Column => y;
+
         public static Vector2Int operator +(Vector2Int a, Vector2Int b) => new Vector2Int(a.x + b.x, a.y + b.y);
-        public static Vector2Int operator -(Vector2Int a, Vector2Int b) => new Vector2Int(a.x - b.x, a.y - b.y);
-        public static Vector2Int operator *(Vector2Int a, Vector2Int b) => new Vector2Int(a.x * b.x, a.y * b.y);
-        public static Vector2Int operator *(Vector2Int a, int coefficient) => new Vector2Int(coefficient * a.x, coefficient * a.y);
-        public static Vector2Int operator *(int coefficient, Vector2Int a) => new Vector2Int(coefficient * a.x, coefficient * a.y);
-        /*        public static Vector2Int operator /(Vector2Int a, Vector2Int b) => new Vector2Int(a.x / b.x, a.y / b.y);
-                public static Vector2Int operator /(Vector2Int a, int coefficient) => new Vector2Int(a.x / coefficient, a.y / coefficient);*/
-        public static bool operator ==(Vector2Int a, Vector2Int b) => a.x == b.x && a.y == b.y;
-        public static bool operator !=(Vector2Int a, Vector2Int b) => a.x != b.x || a.y != b.y;
 
+        public static Vector2Int operator -(Vector2Int a, Vector2Int b) => new Vector2Int(a.x - b.x, a.y - b.y);
+
+        public static Vector2Int operator *(Vector2Int a, Vector2Int b) => new Vector2Int(a.x * b.x, a.y * b.y);
+
+        public static Vector2Int operator *(Vector2Int a, int coefficient) => new Vector2Int(coefficient * a.x, coefficient * a.y);
+
+        public static Vector2Int operator *(int coefficient, Vector2Int a) => new Vector2Int(coefficient * a.x, coefficient * a.y);
+
+        public static bool operator ==(Vector2Int a, Vector2Int b) => a.x == b.x && a.y == b.y;
+
+        public static bool operator !=(Vector2Int a, Vector2Int b) => a.x != b.x || a.y != b.y;
 
         public override bool Equals(object obj)
         {
@@ -55,15 +65,12 @@ namespace OsipLIB.LinearAlgebra
             {
                 throw new Exception("Can`t compare vector with object");
             }
-
         }
-
 
         public override int GetHashCode()
         {
             return (x, y).GetHashCode();
         }
-
 
         public override string ToString()
         {
