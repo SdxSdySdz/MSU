@@ -3,21 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Task1__CR_Localizator.Geometry;
-using Task1__CR_Localizator.Homeomorphisms;
-using Task1__CR_Localizator.LinearAlgebra;
+using OsipLIB.Geometry;
+using OsipLIB.Mappings;
+using OsipLIB.LinearAlgebra;
 
-namespace Task1__CR_Localizator.Graphs
+namespace OsipLIB.Graphs
 {
-    class SymbolicImageGraph : Graph
+    public class SymbolicImageGraph : Graph
     {
-        private Homeomorphism _f;
+        private Mapping _f;
         private Domain _domain;
 
         public Domain Domain => new Domain(_domain);
 
 
-        public SymbolicImageGraph(Homeomorphism f, Domain domain)
+        public SymbolicImageGraph(Mapping f, Domain domain)
         {
             _f = f;
             _domain = domain;

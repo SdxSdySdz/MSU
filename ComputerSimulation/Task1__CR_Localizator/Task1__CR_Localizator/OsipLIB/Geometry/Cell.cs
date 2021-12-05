@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Task1__CR_Localizator.LinearAlgebra;
+using OsipLIB.LinearAlgebra;
 
-namespace Task1__CR_Localizator.Geometry
+namespace OsipLIB.Geometry
 {
-    class Cell : Rectangle
+    public class Cell : Rectangle
     {
         public Cell(Vector2 low, Vector2 high) : base(low, high) { }
 

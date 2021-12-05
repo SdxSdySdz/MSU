@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Task1__CR_Localizator.Geometry.PointSamplers;
-using Task1__CR_Localizator.LinearAlgebra;
+using OsipLIB.Geometry.PointSamplers;
+using OsipLIB.LinearAlgebra;
 
-namespace Task1__CR_Localizator.Homeomorphisms
+namespace OsipLIB.Mappings
 {
-    class IkedaMapping : Homeomorphism
+    class IkedaMapping : Mapping
     {
         private double _d;
         private double _C1;

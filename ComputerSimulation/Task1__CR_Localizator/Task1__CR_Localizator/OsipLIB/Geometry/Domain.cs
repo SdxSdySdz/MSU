@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Task1__CR_Localizator.LinearAlgebra;
+using OsipLIB.LinearAlgebra;
 
-namespace Task1__CR_Localizator.Geometry
+namespace OsipLIB.Geometry
 {
-    class Domain : Rectangle
+    public class Domain : Rectangle
     {
         public int RowCount { get; private set; }
         public int ColumnCount { get; private set; }
@@ -34,6 +34,12 @@ namespace Task1__CR_Localizator.Geometry
             Vector2 high = new Vector2(node.Column * ColumnSplitting, node.Row * RowSplitting);
 
             return new Cell(low + Low, high + Low);
+        }
+
+
+        public int GetCellId(Vector2Int node)
+        {
+            return node.Column + (node.Row - 1) * ColumnCount;
         }
 
 
@@ -75,13 +81,6 @@ namespace Task1__CR_Localizator.Geometry
         {
             return 0 < node.Row && node.Row <= RowCount &&
                    0 < node.Column && node.Column <= ColumnCount;
-        }
-
-
-        public bool ContainsPoint(Vector2 point)
-        {
-            return Low.x <= point.x && point.x < High.x &&
-                   Low.y <= point.y && point.y < High.y;
         }
         /*        public bool ContainsPoint(Vector2 point)
                 {

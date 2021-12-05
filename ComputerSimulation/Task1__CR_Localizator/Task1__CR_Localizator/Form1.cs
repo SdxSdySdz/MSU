@@ -1,19 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Task1__CR_Localizator.Geometry;
-using Task1__CR_Localizator.Geometry.PointSamplers;
-using Task1__CR_Localizator.Graphs;
-using Task1__CR_Localizator.Homeomorphisms;
-using Task1__CR_Localizator.LinearAlgebra;
+using OsipLIB.Geometry;
+using OsipLIB.Geometry.PointSamplers;
+using OsipLIB.Graphs;
+using OsipLIB.LinearAlgebra;
+using OsipLIB.Mappings;
 
 namespace Task1__CR_Localizator
 {
@@ -24,7 +19,7 @@ namespace Task1__CR_Localizator
 
         private Stopwatch _stopwatch;
 
-        private Geometry.Rectangle _drawArea;
+        private OsipLIB.Geometry.Rectangle _drawArea;
         private Color _backgroundColor;
 
         private Pen _testPen;
@@ -38,7 +33,7 @@ namespace Task1__CR_Localizator
 
         private Dictionary<TextBox, bool> _inputValidities;
 
-        internal MainForm(Geometry.Rectangle drawArea, int iterationMaxCount, Homeomorphism f, Domain domain)
+        internal MainForm(OsipLIB.Geometry.Rectangle drawArea, int iterationMaxCount, Mapping f, Domain domain)
         {
             InitializeComponent();
             InitDrawVariables();
@@ -62,7 +57,7 @@ namespace Task1__CR_Localizator
 
 
 
-        private void ConstructGraph(Homeomorphism f, Domain domain)
+        private void ConstructGraph(Mapping f, Domain domain)
         {
             _stopwatch.Start();
             _graph = new SymbolicImageGraph(f, domain);
@@ -143,7 +138,6 @@ namespace Task1__CR_Localizator
             // DrawEdges(graphics);      
         }
 
-
         private void DrawNodes(Graphics graphics)
         {
             foreach (var node in _graph.Nodes)
@@ -153,7 +147,6 @@ namespace Task1__CR_Localizator
                 DrawCell(graphics, cell);
             }
         }
-
 
         private void DrawEdges(Graphics graphics)
         {
@@ -350,7 +343,7 @@ namespace Task1__CR_Localizator
             int columnCount = 33;
 
             PointSampler pointSampler = new UniformSampler(pointCountInRow, pointCountInRow, 0.01);
-            Homeomorphism f = new QuadraticMapping(pointSampler, re, im);
+            Mapping f = new QuadraticMapping(pointSampler, re, im);
 
             _domain = new Domain(low, high, rowCount, columnCount);
 

@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Task1__CR_Localizator.Geometry;
-using Task1__CR_Localizator.Geometry.PointSamplers;
-using Task1__CR_Localizator.Graphs;
-using Task1__CR_Localizator.Homeomorphisms;
-using Task1__CR_Localizator.LinearAlgebra;
+using OsipLIB.Geometry;
+using OsipLIB.Geometry.PointSamplers;
+using OsipLIB.LinearAlgebra;
+using OsipLIB.Mappings;
 
 namespace Task1__CR_Localizator
 {
@@ -28,7 +24,7 @@ namespace Task1__CR_Localizator
 
 
             PointSampler pointSampler = new UniformSampler(pointCountInRow, pointCountInRow, 0);
-            Homeomorphism f = new QuadraticMapping(pointSampler, 0.29, -0.1);
+            Mapping f = new QuadraticMapping(pointSampler, 0.29, -0.1);
 
             Domain domain = new Domain(low, high, rowCount, columnCount);
 

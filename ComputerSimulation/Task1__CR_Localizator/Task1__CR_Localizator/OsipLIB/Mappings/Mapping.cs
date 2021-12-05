@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Task1__CR_Localizator.Geometry;
-using Task1__CR_Localizator.Geometry.PointSamplers;
-using Task1__CR_Localizator.LinearAlgebra;
+using OsipLIB.Geometry;
+using OsipLIB.Geometry.PointSamplers;
+using OsipLIB.LinearAlgebra;
 
-namespace Task1__CR_Localizator.Homeomorphisms
+namespace OsipLIB.Mappings
 {
-    abstract class Homeomorphism
+    public abstract class Mapping
     {
         protected PointSampler PointSampler;
 
 
-        protected Homeomorphism(PointSampler pointSampler)
+        protected Mapping(PointSampler pointSampler)
         {
             PointSampler = pointSampler;
         } 

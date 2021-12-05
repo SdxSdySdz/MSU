@@ -64,27 +64,32 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CR_SetLocalizator.cs" />
-    <Compile Include="Geometry\Cell.cs" />
-    <Compile Include="Geometry\Domain.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Geometry\PointSamplers\PointSampler.cs" />
-    <Compile Include="Geometry\PointSamplers\UniformSampler.cs" />
-    <Compile Include="Geometry\Rectangle.cs" />
-    <Compile Include="Graphs\Graph.cs" />
-    <Compile Include="Graphs\SymbolicImageGraph.cs" />
-    <Compile Include="Homeomorphisms\ControlTaskMapping.cs" />
-    <Compile Include="Homeomorphisms\Homeomorphism.cs" />
-    <Compile Include="Homeomorphisms\IkedaMapping.cs" />
-    <Compile Include="Homeomorphisms\MishaMapping.cs" />
-    <Compile Include="Homeomorphisms\QuadraticMapping.cs" />
-    <Compile Include="LinearAlgebra\Vector2.cs" />
-    <Compile Include="LinearAlgebra\Vector2Int.cs" />
+    <Compile Include="OsipLIB\Geometry\Cell.cs" />
+    <Compile Include="OsipLIB\Geometry\Domain.cs" />
+    <Compile Include="OsipLIB\Geometry\PointSamplers\PointSampler.cs" />
+    <Compile Include="OsipLIB\Geometry\PointSamplers\UniformSampler.cs" />
+    <Compile Include="OsipLIB\Geometry\Rectangle.cs" />
+    <Compile Include="OsipLIB\Graphs\Graph.cs" />
+    <Compile Include="OsipLIB\Graphs\INode.cs" />
+    <Compile Include="OsipLIB\Graphs\SymbolicImageGraph.cs" />
+    <Compile Include="OsipLIB\Graphs\Tools\NodesSubstitution.cs" />
+    <Compile Include="OsipLIB\Graphs\Tools\TopologicalSorter.cs" />
+    <Compile Include="OsipLIB\LinearAlgebra\Matrix3x3.cs" />
+    <Compile Include="OsipLIB\LinearAlgebra\Vector2.cs" />
+    <Compile Include="OsipLIB\LinearAlgebra\Vector2Int.cs" />
+    <Compile Include="OsipLIB\LinearAlgebra\Vector3.cs" />
+    <Compile Include="OsipLIB\Mappings\ControlTaskMapping.cs" />
+    <Compile Include="OsipLIB\Mappings\IkedaMapping.cs" />
+    <Compile Include="OsipLIB\Mappings\Mapping.cs" />
+    <Compile Include="OsipLIB\Mappings\MishaMapping.cs" />
+    <Compile Include="OsipLIB\Mappings\ProjectiveSpaceMapping.cs" />
+    <Compile Include="OsipLIB\Mappings\QuadraticMapping.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">

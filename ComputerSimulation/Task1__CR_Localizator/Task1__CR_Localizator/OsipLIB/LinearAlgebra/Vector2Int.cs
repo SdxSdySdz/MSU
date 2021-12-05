@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using OsipLIB.Graphs;
 
-namespace Task1__CR_Localizator.LinearAlgebra
+namespace OsipLIB.LinearAlgebra
 {
-    struct Vector2Int
+    public struct Vector2Int : INode
     {
         public int x { get; private set; }
         public int y { get; private set; }
