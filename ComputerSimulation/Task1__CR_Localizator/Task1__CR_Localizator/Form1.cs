@@ -40,22 +40,17 @@ namespace Task1__CR_Localizator
 
             _inputValidities = new Dictionary<TextBox, bool>
             {
-                {ReInput, false},
-                {ImInput, false},
+                { ReInput, false },
+                { ImInput, false },
             };
 
             _stopwatch = new Stopwatch();
             _drawArea = drawArea;
-            
 
             _domain = domain;
 
-
-
             TryCalculate();
         }
-
-
 
         private void ConstructGraph(Mapping f, Domain domain)
         {
@@ -64,7 +59,6 @@ namespace Task1__CR_Localizator
             _stopwatch.Stop();
             Console.WriteLine($"[Time] Constructing graph {_stopwatch.ElapsedMilliseconds / 1000.0}");
         }
-
 
         private void DeleteNonReturnableNodes(out double deletingTime)
         {
@@ -75,8 +69,6 @@ namespace Task1__CR_Localizator
             Console.WriteLine($"[Time] Deleting non returnable nodes {deletingTime / 1000.0}");
         }
 
-
-
         private void SplitGraph(out double splittingTime)
         {
             _stopwatch.Restart();
@@ -85,7 +77,6 @@ namespace Task1__CR_Localizator
             splittingTime = _stopwatch.ElapsedMilliseconds;
             Console.WriteLine($"[Time] Splitting {splittingTime / 1000.0}");
         }
-
 
         private void InitDrawVariables()
         {
@@ -114,7 +105,6 @@ namespace Task1__CR_Localizator
             _edgeBrush = new SolidBrush(edgeColor);
         }
 
-
         private void Canvas_Paint(object sender, PaintEventArgs e)
         {
             if (_graph == null) return;
@@ -122,20 +112,13 @@ namespace Task1__CR_Localizator
             Console.WriteLine("Draw");
             e.Graphics.Clear(_backgroundColor);
             NormalizeView(e.Graphics);
-            
             DrawAxes(e.Graphics);
-
-            // DrawCircle(e.Graphics, _testPen, 0, 0, 1);
-
             DrawGraph(e.Graphics);
-            // DrawGrid(e.Graphics);
         }
-
 
         private void DrawGraph(Graphics graphics)
         {
             DrawNodes(graphics);
-            // DrawEdges(graphics);      
         }
 
         private void DrawNodes(Graphics graphics)
@@ -170,14 +153,11 @@ namespace Task1__CR_Localizator
             }
         }
 
-
         private void DrawCell(Graphics graphics, Cell cell)
         {
             var size = cell.Size;
-            // graphics.DrawRectangle(_cellPen, (float)cell.Low.x, (float)cell.Low.y, (float)size.x, (float)size.y);
             graphics.FillRectangle(_cellBrush, (float)cell.Low.x, (float)cell.Low.y, (float)size.x, (float)size.y);
         }
-
 
         private void DrawEdge(Graphics graphics, Cell from, Cell to)
         {
@@ -186,19 +166,17 @@ namespace Task1__CR_Localizator
             var difference = toCenter - fromCenter;
             double distance = difference.Magnitude;
             double cellRadius = Math.Min(from.Width, from.Height) / 2.0;
-            double percent = 1.0 - cellRadius / (2 * distance);
+            double percent = 1.0 - (cellRadius / (2 * distance));
 
             _edgePen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
-            graphics.DrawLine(_edgePen, fromCenter.ToPointF(), (fromCenter + percent * difference).ToPointF());
+            graphics.DrawLine(_edgePen, fromCenter.ToPointF(), (fromCenter + (percent * difference)).ToPointF());
         }
-
 
         private void DrawLoop(Graphics graphics, Cell cell)
         {
             Vector2 center = cell.Center;
             DrawCircle(graphics, _edgePen, (float)center.x, (float)center.y, (float)(cell.Width / 2.0));
         }
-
 
         private void DrawGrid(Graphics graphics)
         {
@@ -219,13 +197,12 @@ namespace Task1__CR_Localizator
             graphics.DrawLine(_gridPen, (float)_domain.MaxX, (float)_domain.MinY, (float)_domain.MaxX, (float)_domain.MaxY);
         }
 
-
         private void NormalizeView(Graphics graphics)
         {
             float alpha = Convert.ToSingle(Canvas.Width) / Convert.ToSingle(Canvas.Height);
             float alphaDomain = Convert.ToSingle(_drawArea.Width / _drawArea.Height);
 
-            float targetWidth = Math.Max(alpha, alphaDomain) *  (float)_drawArea.Height / 2f;
+            float targetWidth = Math.Max(alpha, alphaDomain) * (float)_drawArea.Height / 2f;
 
             float scale = Canvas.Width / 2f / targetWidth;
 
@@ -234,7 +211,6 @@ namespace Task1__CR_Localizator
 
             graphics.TranslateTransform((float)-_drawArea.Center.x, (float)-_drawArea.Center.y);
         }
-
 
         private void DrawAxes(Graphics graphics)
         {
@@ -316,13 +292,11 @@ namespace Task1__CR_Localizator
             TryCalculate();
         }
 
-
         private void TryCalculate()
         {
-            if (TryParseInput(IterationCountInput, out double maxIterationCount) && 
-                TryParseInput(ReInput, out double re) && 
-                TryParseInput(ImInput, out double im)
-                )
+            if (TryParseInput(IterationCountInput, out double maxIterationCount) &&
+                TryParseInput(ReInput, out double re) &&
+                TryParseInput(ImInput, out double im))
             {
                 Calculate((int)maxIterationCount, re, im);
                 NodesCountTextBox.Text = _graph.NodesCount.ToString();

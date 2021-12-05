@@ -7,13 +7,10 @@ using OsipLIB.Mappings;
 
 namespace Task1__CR_Localizator
 {
-    static class Program
+    internal static class Program
     {
-        /// <summary>
-        /// Главная точка входа для приложения.
-        /// </summary>
         [STAThread]
-        static void Main()
+        private static void Main()
         {
             int iterationMaxCount = 5;
             int pointCountInRow = 5;
@@ -22,12 +19,10 @@ namespace Task1__CR_Localizator
             int rowCount = 33;
             int columnCount = 33;
 
-
             PointSampler pointSampler = new UniformSampler(pointCountInRow, pointCountInRow, 0);
             Mapping f = new QuadraticMapping(pointSampler, 0.29, -0.1);
 
             Domain domain = new Domain(low, high, rowCount, columnCount);
-
 
             low = new Vector2(-2.5, -2.5);
             high = new Vector2(2.5, 2.5);

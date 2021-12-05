@@ -1,27 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using OsipLIB.Geometry;
-using OsipLIB.Mappings;
 using OsipLIB.LinearAlgebra;
+using OsipLIB.Mappings;
 
 namespace OsipLIB.Graphs
 {
-    public class SymbolicImageGraph : Graph
+    public class SymbolicImageGraph : Graph<Vector2Int>
     {
         private Mapping _f;
         private Domain _domain;
-
-        public Domain Domain => new Domain(_domain);
-
 
         public SymbolicImageGraph(Mapping f, Domain domain)
         {
             _f = f;
             _domain = domain;
-
 
             for (int row = 1; row <= domain.RowCount; row++)
             {
@@ -44,9 +36,11 @@ namespace OsipLIB.Graphs
             }
         }
 
+        private SymbolicImageGraph() : base()
+        {
+        }
 
-        private SymbolicImageGraph() : base() { }
-
+        public Domain Domain => new Domain(_domain);
 
         public override void AddNode(Vector2Int node)
         {
@@ -60,7 +54,6 @@ namespace OsipLIB.Graphs
             }
         }
 
-
         public override void AddEdge(Vector2Int node, Vector2Int outNode)
         {
             if (_domain.ContainsNode(node) && _domain.ContainsNode(outNode))
@@ -73,7 +66,6 @@ namespace OsipLIB.Graphs
             }
         }
 
-
         public SymbolicImageGraph Splitted()
         {
             Domain splittedDomain = _domain.Splitted();
@@ -81,9 +73,8 @@ namespace OsipLIB.Graphs
             SymbolicImageGraph splittedGraph = new SymbolicImageGraph();
             splittedGraph._f = _f;
             splittedGraph._domain = splittedDomain;
-            
 
-            foreach (var node in _graph.Keys)
+            foreach (var node in GraphDictionary.Keys)
             {
                 Vector2Int[] subNodes = _domain.GetSubNodes(node);
                 foreach (var subNode in subNodes)
@@ -91,7 +82,6 @@ namespace OsipLIB.Graphs
                     Cell subCell = splittedDomain.GetCell(subNode);
 
                     Vector2[] imagePoints = _f.ApplyToArea(subCell);
-                    //imagePoints = splittedDomain.Filter(imagePoints);
 
                     foreach (var imagePoint in imagePoints)
                     {
@@ -99,7 +89,7 @@ namespace OsipLIB.Graphs
                         {
                             Vector2Int nodeBefore = _domain.GetNode(imagePoint);
 
-                            if (_graph.TryGetValue(nodeBefore, out var value))
+                            if (GraphDictionary.TryGetValue(nodeBefore, out var value))
                             {
                                 Vector2Int outNode = splittedDomain.GetNode(imagePoint);
                                 splittedGraph.AddEdge(subNode, outNode);
@@ -110,6 +100,6 @@ namespace OsipLIB.Graphs
             }
 
             return splittedGraph;
-        } 
+        }
     }
 }

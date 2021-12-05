@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using OsipLIB.LinearAlgebra;
 
 namespace OsipLIB.Geometry
@@ -26,20 +22,20 @@ namespace OsipLIB.Geometry
         public Domain(Domain domain) : this(domain.Low, domain.High, domain.RowCount, domain.ColumnCount) { }
 
 
-        public Cell GetCell(Vector2Int node)
+        public Cell GetCell(Vector2Int cellIndex)
         {
-            if (ContainsNode(node) == false) throw new Exception("Domain does not contain this node");
+            if (ContainsNode(cellIndex) == false) throw new Exception("Domain does not contain this node");
 
-            Vector2 low = new Vector2((node.Column - 1) * ColumnSplitting, (node.Row - 1) * RowSplitting);
-            Vector2 high = new Vector2(node.Column * ColumnSplitting, node.Row * RowSplitting);
+            Vector2 low = new Vector2((cellIndex.Column - 1) * ColumnSplitting, (cellIndex.Row - 1) * RowSplitting);
+            Vector2 high = new Vector2(cellIndex.Column * ColumnSplitting, cellIndex.Row * RowSplitting);
 
             return new Cell(low + Low, high + Low);
         }
 
 
-        public int GetCellId(Vector2Int node)
+        public int GetCellId(Vector2Int cellIndex)
         {
-            return node.Column + (node.Row - 1) * ColumnCount;
+            return cellIndex.Column + (cellIndex.Row - 1) * ColumnCount;
         }
 
 

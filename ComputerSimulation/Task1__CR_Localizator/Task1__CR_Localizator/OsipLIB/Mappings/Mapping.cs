@@ -11,17 +11,14 @@ namespace OsipLIB.Mappings
 {
     public abstract class Mapping
     {
-        protected PointSampler PointSampler;
-
+        private PointSampler _pointSampler;
 
         protected Mapping(PointSampler pointSampler)
         {
-            PointSampler = pointSampler;
-        } 
-
+            _pointSampler = pointSampler;
+        }
 
         public abstract Vector2 Apply(Vector2 point);
-
 
         public Vector2[] Apply(Vector2[] points)
         {
@@ -35,12 +32,9 @@ namespace OsipLIB.Mappings
             return newPoints;
         }
 
-        // public Vector2[] Apply(Vector2[] points) => points.AsParallel().Select(point => Apply(point)).ToArray();
-
-
         public Vector2[] ApplyToArea(Cell cell)
         {
-            Vector2[] samples = PointSampler.Sample(cell);
+            Vector2[] samples = _pointSampler.Sample(cell);
 
             return Apply(samples);
         }
