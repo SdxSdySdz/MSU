@@ -11,59 +11,64 @@ namespace OsipLIB.Geometry
         public double ColumnSplitting => (High.x - Low.x) / ColumnCount;
         public Vector2 Splitting => new Vector2(ColumnSplitting, RowSplitting);
 
-
         public Domain(Vector2 low, Vector2 high, int rowCount, int columnCount) : base(low, high)
         {
             RowCount = rowCount;
             ColumnCount = columnCount;
         }
 
-
         public Domain(Domain domain) : this(domain.Low, domain.High, domain.RowCount, domain.ColumnCount) { }
 
-
-        public Cell GetCell(Vector2Int cellIndex)
+        public Cell GetCell(int cellId)
         {
-            if (ContainsNode(cellIndex) == false) throw new Exception("Domain does not contain this node");
+            int row = cellId / ColumnCount;
+            int column = cellId - ColumnCount * row;
 
-            Vector2 low = new Vector2((cellIndex.Column - 1) * ColumnSplitting, (cellIndex.Row - 1) * RowSplitting);
-            Vector2 high = new Vector2(cellIndex.Column * ColumnSplitting, cellIndex.Row * RowSplitting);
+            return GetCell(new Vector2Int(row, column));
+        }
+
+        public Cell GetCell(Vector2Int cellCoordinates)
+        {
+            if (ContainsCellCoordinates(cellCoordinates) == false)
+                throw new Exception($"Domain does not contain cell with coordinates {cellCoordinates}");
+
+            Vector2 low = new Vector2(cellCoordinates.Column * ColumnSplitting, cellCoordinates.Row * RowSplitting);
+            Vector2 high = new Vector2((cellCoordinates.Column + 1) * ColumnSplitting, (cellCoordinates.Row + 1) * RowSplitting);
 
             return new Cell(low + Low, high + Low);
         }
 
-
-        public int GetCellId(Vector2Int cellIndex)
+        public bool TryGetCellCoordinates(Vector2 point, out Vector2Int cellCoordinates)
         {
-            return cellIndex.Column + (cellIndex.Row - 1) * ColumnCount;
+            cellCoordinates = GetCellCoordinates(point);
+            return ContainsCellCoordinates(cellCoordinates);
         }
-
 
         // TODO: if point.x or point.y belongs to the integer grid
-        public Vector2Int GetNode(Vector2 point)
+        public Vector2Int GetCellCoordinates(Vector2 point)
         {
-            if (ContainsPoint(point) == false)
-            {
-                throw new Exception("Point is out of domain");
-            }
-
             point = point - Low;
-            point = point / Splitting + Vector2.One;
-            
-            return new Vector2Int((int)point.y, (int)point.x); ;
+            point = point / Splitting;
+
+            return new Vector2Int((int)point.y, (int)point.x);
         }
 
-        public Vector2Int[] GetSubNodes(Vector2Int node)
+        public int GetCellId(Vector2Int cellCoordinates)
         {
-            int row = node.Row;
-            int column = node.Column;
+            return cellCoordinates.Column + ColumnCount * cellCoordinates.Row;
+        }
+
+        public Vector2Int[] GetSubNodes(Vector2Int cellIndex)
+        {
+            int row = cellIndex.Row;
+            int column = cellIndex.Column;
 
             return new Vector2Int[]
             {
-                new Vector2Int(2 * row - 1, 2 * column - 1),
-                new Vector2Int(2 * row - 1, 2 * column),
-                new Vector2Int(2 * row, 2 * column - 1),
                 new Vector2Int(2 * row, 2 * column),
+                new Vector2Int(2 * row, 2 * column + 1),
+                new Vector2Int(2 * row + 1, 2 * column),
+                new Vector2Int(2 * row + 1, 2 * column + 1),
             };
         }
 
@@ -73,15 +78,15 @@ namespace OsipLIB.Geometry
         }
 
 
-        public bool ContainsNode(Vector2Int node)
+        public bool ContainsCellCoordinates(Vector2Int cellIndex)
         {
-            return 0 < node.Row && node.Row <= RowCount &&
-                   0 < node.Column && node.Column <= ColumnCount;
+            return 0 <= cellIndex.Row && cellIndex.Row < RowCount &&
+                   0 <= cellIndex.Column && cellIndex.Column < ColumnCount;
         }
-        /*        public bool ContainsPoint(Vector2 point)
-                {
-                    return Low.x <= point.x && point.x <= High.x &&
-                           Low.y <= point.y && point.y <= High.y;
-                }*/
+
+        public bool IsCellIdValid(int cellId)
+        {
+            return 0 <= cellId && cellId < RowCount * ColumnCount;
+        }
     }
 }
