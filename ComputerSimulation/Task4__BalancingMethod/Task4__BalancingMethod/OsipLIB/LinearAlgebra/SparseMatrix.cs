@@ -1,9 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System;
-using System.Collections;
 using OsipLIB.Geometry;
 using OsipLIB.Graphs;
 using OsipLIB.Graphs.Tools;
@@ -116,7 +113,7 @@ namespace OsipLIB.LinearAlgebra
         }
 
         // TODO SymbolicImageGraph -> Graph
-        public static SparseMatrix FromGraph(SymbolicImageGraph graph)
+        public static SparseMatrix FromSymbolicImageGraph(SymbolicImageGraph graph)
         {
             Domain domain = graph.Domain;
             var matrix = new SparseMatrix(domain.ColumnCount * domain.RowCount);
@@ -125,10 +122,10 @@ namespace OsipLIB.LinearAlgebra
             var edges = graph.Edges;
             foreach (var edge in edges)
             {
-                Node sourceNode = NodeTransformer.Transform(edge.Source, domain);
-                Node outNode = NodeTransformer.Transform(edge.Destination, domain);
+                int sourceId = domain.GetCellId(edge.Source);
+                int outId = domain.GetCellId(edge.Destination);
                 
-                matrix[sourceNode.Id, outNode.Id] = 1;
+                matrix[sourceId, outId] = 1;
             }
 
             return matrix;

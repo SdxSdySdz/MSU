@@ -1,40 +1,35 @@
-﻿using OsipLIB.Graphs;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OsipLIB.Graphs.Tools
 {
-    class NodesSubstitution : IEnumerable<(Node PreviousNode, Node NewNode)>
+    public class NodesSubstitution : IEnumerable<(INode PreviousNode, INode NewNode)>
     {
-        private Dictionary<Node, Node> _substitution;
+        private Dictionary<INode, INode> _substitution;
 
-
-        public NodesSubstitution(IEnumerable<Node> previousNodes, IEnumerable<Node> newNodes)
+        public NodesSubstitution(IEnumerable<INode> previousNodes, IEnumerable<INode> newNodes)
         {
             if (previousNodes.Count() != newNodes.Count())
             {
                 throw new Exception("Can`t create substitution because there are containers that has different lengths");
             }
 
-            var previousNodesSet = new HashSet<Node>(previousNodes);
-            var newNodesSet = new HashSet<Node>(newNodes);
+            var previousNodesSet = new HashSet<INode>(previousNodes);
+            var newNodesSet = new HashSet<INode>(newNodes);
             if (previousNodesSet.SetEquals(newNodesSet) == false)
             {
                 throw new Exception("Can`t create substitution because there are containers that has different contents");
             }
 
-            _substitution = new Dictionary<Node, Node>();
+            _substitution = new Dictionary<INode, INode>();
             Match(previousNodes.ToList(), newNodes.ToList());
         }
 
-
         public override string ToString()
         {
-            string result = "";
+            string result = string.Empty;
             foreach (var item in _substitution)
             {
                 result += $"{item.Key} -> {item.Value}\n";
@@ -43,8 +38,7 @@ namespace OsipLIB.Graphs.Tools
             return result;
         }
 
-
-        public IEnumerator<(Node PreviousNode, Node NewNode)> GetEnumerator()
+        public IEnumerator<(INode PreviousNode, INode NewNode)> GetEnumerator()
         {
             foreach (var item in _substitution)
             {
@@ -52,14 +46,12 @@ namespace OsipLIB.Graphs.Tools
             }
         }
 
-
         IEnumerator IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();
         }
 
-
-        private void Match(List<Node> previousNodes, List<Node> newNodes)
+        private void Match(List<INode> previousNodes, List<INode> newNodes)
         {
             for (int i = 0; i < previousNodes.Count; i++)
             {

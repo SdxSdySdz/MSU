@@ -22,21 +22,10 @@ namespace OsipLIB.Graphs.Tools
 
             double area = domain.GetCell(Vector2Int.Zero).Area * areaMultiplier;
 
-            /*Dictionary<int, double> rowSums = matrix.GetRowSums();
-            foreach (var rowSum in rowSums)
-            {
-                Console.WriteLine("Start");
-                int row = rowSum.Key;
-                Vector2Int cellCoordinates = NodeTransformer.TransformNode(new Node(row), domain);
-                Cell cell = domain.GetCell(cellCoordinates);
-                _density[cell.Center] = rowSum.Value / area;
-                Console.WriteLine("End");
-            }*/
             Console.WriteLine("Start Density");
             for (int row = 0; row < matrix.RowCount; row++)
             {
-                Vector2Int cellCoordinates = NodeTransformer.TransformNode(new Node(row), domain);
-                Cell cell = domain.GetCell(cellCoordinates);
+                Cell cell = domain.GetCell(row);
                 double rowSum = matrix.RowSum(row);
                 if (rowSum != 0)
                 {

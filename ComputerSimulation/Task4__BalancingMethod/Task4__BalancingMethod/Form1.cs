@@ -1,16 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using OsipLIB.Geometry;
 using OsipLIB.Graphs;
 using OsipLIB.Graphs.Tools;
-using OsipLIB.IterationMethods;
 using OsipLIB.LinearAlgebra;
 using Tao.FreeGlut;
 using Tao.OpenGl;

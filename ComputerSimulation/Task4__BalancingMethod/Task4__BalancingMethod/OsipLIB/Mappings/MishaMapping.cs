@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using OsipLIB.Geometry.PointSamplers;
+﻿using OsipLIB.Geometry.PointSamplers;
 using OsipLIB.LinearAlgebra;
 
-namespace OsipLIB.Homeomorphisms
+namespace OsipLIB.Mappings
 {
-    class MishaMapping : Homeomorphism
+    public class MishaMapping : Mapping
     {
-        public MishaMapping(PointSampler pointSampler) : base(pointSampler) { }
-
+        public MishaMapping(PointSampler pointSampler) : base(pointSampler)
+        {
+        }
 
         public override Vector2 Apply(Vector2 point)
         {
