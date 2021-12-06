@@ -7,3 +7,4 @@ D:\Progs\MSU_git\MSU\ComputerSimulation\Task1__CR_Localizator\Task1__CR_Localiza
 D:\Progs\MSU_git\MSU\ComputerSimulation\Task1__CR_Localizator\Task1__CR_Localizator\obj\Debug\Task1__CR_Localizator.csproj.CoreCompileInputs.cache
 D:\Progs\MSU_git\MSU\ComputerSimulation\Task1__CR_Localizator\Task1__CR_Localizator\obj\Debug\Task1__CR_Localizator.exe
 D:\Progs\MSU_git\MSU\ComputerSimulation\Task1__CR_Localizator\Task1__CR_Localizator\obj\Debug\Task1__CR_Localizator.pdb
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task1__CR_Localizator\Task1__CR_Localizator\obj\Debug\Task1__CR_Localizator.csproj.AssemblyReference.cache

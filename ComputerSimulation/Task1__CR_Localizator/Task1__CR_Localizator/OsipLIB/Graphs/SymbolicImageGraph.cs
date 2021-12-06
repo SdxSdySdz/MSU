@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using OsipLIB.Geometry;
 using OsipLIB.LinearAlgebra;
 using OsipLIB.Mappings;
@@ -15,21 +17,20 @@ namespace OsipLIB.Graphs
             _f = f;
             _domain = domain;
 
-            for (int row = 1; row <= domain.RowCount; row++)
+            for (int row = 0; row < domain.RowCount; row++)
             {
-                for (int column = 1; column <= domain.ColumnCount; column++)
+                for (int column = 0; column < domain.ColumnCount; column++)
                 {
-                    Vector2Int node = new Vector2Int(row, column);
-                    Cell cell = domain.GetCell(node);
+                    Vector2Int sourceCoordinates = new Vector2Int(row, column);
+                    Cell cell = domain.GetCell(sourceCoordinates);
 
                     Vector2[] imagePoints = _f.ApplyToArea(cell);
 
                     foreach (var imagePoint in imagePoints)
                     {
-                        if (_domain.ContainsPoint(imagePoint))
+                        if (_domain.TryGetCellCoordinates(imagePoint, out Vector2Int outCoordinates))
                         {
-                            Vector2Int outNode = _domain.GetNode(imagePoint);
-                            AddEdge(node, outNode);
+                            AddEdge(sourceCoordinates, outCoordinates);
                         }
                     }
                 }
@@ -44,7 +45,7 @@ namespace OsipLIB.Graphs
 
         public override void AddNode(Vector2Int node)
         {
-            if (_domain.ContainsNode(node))
+            if (_domain.ContainsCellCoordinates(node))
             {
                 base.AddNode(node);
             }
@@ -56,13 +57,13 @@ namespace OsipLIB.Graphs
 
         public override void AddEdge(Vector2Int node, Vector2Int outNode)
         {
-            if (_domain.ContainsNode(node) && _domain.ContainsNode(outNode))
+            if (_domain.ContainsCellCoordinates(node) && _domain.ContainsCellCoordinates(outNode))
             {
                 base.AddEdge(node, outNode);
             }
             else
             {
-                throw new Exception("Node is out of domain");
+                throw new Exception($"Edge [{node} -> {outNode}] is out of domain");
             }
         }
 
@@ -85,14 +86,12 @@ namespace OsipLIB.Graphs
 
                     foreach (var imagePoint in imagePoints)
                     {
-                        if (_domain.ContainsPoint(imagePoint))
+                        if (_domain.TryGetCellCoordinates(imagePoint, out Vector2Int sourceCoordinates))
                         {
-                            Vector2Int nodeBefore = _domain.GetNode(imagePoint);
-
-                            if (GraphDictionary.TryGetValue(nodeBefore, out var value))
+                            if (GraphDictionary.TryGetValue(sourceCoordinates, out var value))
                             {
-                                Vector2Int outNode = splittedDomain.GetNode(imagePoint);
-                                splittedGraph.AddEdge(subNode, outNode);
+                                Vector2Int outCoordinates = splittedDomain.GetCellCoordinates(imagePoint);
+                                splittedGraph.AddEdge(subNode, outCoordinates);
                             }
                         }
                     }
@@ -100,6 +99,11 @@ namespace OsipLIB.Graphs
             }
 
             return splittedGraph;
+        }
+
+        public List<Cell> GetCells()
+        {
+            return GraphDictionary.Keys.Select(node => _domain.GetCell(node)).ToList();
         }
     }
 }

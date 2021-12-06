@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using OsipLIB.LinearAlgebra;
 
 namespace OsipLIB.Geometry
@@ -28,11 +29,27 @@ namespace OsipLIB.Geometry
         public double MaxY => High.y;
         public double Width => High.x - Low.x;
         public double Height => High.y - Low.y;
+        public double Area => Width * Height;
+
+        public List<Vector2> Vertexes =>
+            new List<Vector2>()
+            {
+                Low,
+                Low + Vector2.Right * Width,
+                High,
+                High + Vector2.Left * Width,
+            };
 
         public bool ContainsPoint(Vector2 point)
         {
-            return Low.x <= point.x && point.x < High.x &&
-                   Low.y <= point.y && point.y < High.y;
+            return Low.x <= point.x && point.x <= High.x &&
+                   Low.y <= point.y && point.y <= High.y;
+        }
+
+        public bool StronglyContainsPoint(Vector2 point)
+        {
+            return Low.x < point.x && point.x < High.x &&
+                   Low.y < point.y && point.y < High.y;
         }
 
         public void Centerize(Vector2 newCenter)

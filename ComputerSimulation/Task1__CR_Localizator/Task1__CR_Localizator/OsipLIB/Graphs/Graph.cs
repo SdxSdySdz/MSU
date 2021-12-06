@@ -26,6 +26,24 @@ namespace OsipLIB.Graphs
             }
         }
 
+        public List<(T Source, T Destination)> Edges
+        {
+            get
+            {
+                var edges = new List<(T Source, T Destination)>();
+
+                foreach (var node in GraphDictionary.Keys)
+                {
+                    foreach (var outNode in GraphDictionary[node])
+                    {
+                        edges.Add((node, outNode));
+                    }
+                }
+
+                return edges;
+            }
+        }
+
         public Dictionary<T, HashSet<T>> TransposedDictionary => GetTransposedDictionary();
 
         public Graph()

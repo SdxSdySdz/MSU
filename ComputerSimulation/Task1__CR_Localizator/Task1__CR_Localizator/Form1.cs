@@ -33,10 +33,14 @@ namespace Task1__CR_Localizator
 
         private Dictionary<TextBox, bool> _inputValidities;
 
-        internal MainForm(OsipLIB.Geometry.Rectangle drawArea, int iterationMaxCount, Mapping f, Domain domain)
+        internal MainForm()
         {
             InitializeComponent();
             InitDrawVariables();
+
+            Vector2 low = new Vector2(-2.5, -2.5);
+            Vector2 high = new Vector2(2.5, 2.5);
+            _drawArea = new OsipLIB.Geometry.Rectangle(low, high);
 
             _inputValidities = new Dictionary<TextBox, bool>
             {
@@ -45,9 +49,6 @@ namespace Task1__CR_Localizator
             };
 
             _stopwatch = new Stopwatch();
-            _drawArea = drawArea;
-
-            _domain = domain;
 
             TryCalculate();
         }
@@ -310,7 +311,7 @@ namespace Task1__CR_Localizator
 
         private void Calculate(int iterationMaxCount, double re, double im)
         {
-            int pointCountInRow = 5;
+            int pointCountInRow = 10;
             Vector2 low = new Vector2(-2.5, -2.5);
             Vector2 high = new Vector2(2.5, 2.5);
             int rowCount = 33;
