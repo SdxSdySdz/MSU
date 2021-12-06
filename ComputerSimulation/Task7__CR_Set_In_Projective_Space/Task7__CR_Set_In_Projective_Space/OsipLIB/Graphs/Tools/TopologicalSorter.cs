@@ -1,13 +1,9 @@
-﻿using OsipLIB.LinearAlgebra;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OsipLIB.Graphs.Tools
 {
-    static class TopologicalSorter
+    public static class TopologicalSorter
     {
         public static NodesSubstitution Sort(SymbolicImageGraph graph)
         {
@@ -17,7 +13,6 @@ namespace OsipLIB.Graphs.Tools
             IEnumerable<INode> previousNodes = graph.Nodes
                                                 .OrderBy(graph.Domain.GetCellId)
                                                 .Select(node => (INode)node);
-            
 
             return new NodesSubstitution(previousNodes, newNodes);
         }
