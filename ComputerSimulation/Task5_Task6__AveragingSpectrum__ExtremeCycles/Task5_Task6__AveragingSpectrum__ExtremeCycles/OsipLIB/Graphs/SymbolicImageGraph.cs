@@ -1,56 +1,51 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using OsipLIB.Geometry;
-using OsipLIB.Mappings;
 using OsipLIB.LinearAlgebra;
+using OsipLIB.Mappings;
 
 namespace OsipLIB.Graphs
 {
-    public class SymbolicImageGraph : Graph
+    public class SymbolicImageGraph : Graph<Vector2Int>
     {
         private Mapping _f;
         private Domain _domain;
 
-        public Domain Domain => new Domain(_domain);
-
+        private SymbolicImageGraph() : base()
+        {
+        }
 
         public SymbolicImageGraph(Mapping f, Domain domain)
         {
             _f = f;
             _domain = domain;
 
-
-            for (int row = 1; row <= domain.RowCount; row++)
+            for (int row = 0; row < domain.RowCount; row++)
             {
-                for (int column = 1; column <= domain.ColumnCount; column++)
+                for (int column = 0; column < domain.ColumnCount; column++)
                 {
-                    Vector2Int node = new Vector2Int(row, column);
-                    Cell cell = domain.GetCell(node);
+                    Vector2Int sourceCoordinates = new Vector2Int(row, column);
+                    Cell cell = domain.GetCell(sourceCoordinates);
 
                     Vector2[] imagePoints = _f.ApplyToArea(cell);
 
                     foreach (var imagePoint in imagePoints)
                     {
-                        if (_domain.ContainsPoint(imagePoint))
+                        if (_domain.TryGetCellCoordinates(imagePoint, out Vector2Int outCoordinates))
                         {
-                            Vector2Int outNode = _domain.GetNode(imagePoint);
-                            AddEdge(node, outNode);
+                            AddEdge(sourceCoordinates, outCoordinates);
                         }
                     }
                 }
             }
         }
 
-
-        private SymbolicImageGraph() : base() { }
-
+        public Domain Domain => new Domain(_domain);
 
         public override void AddNode(Vector2Int node)
         {
-            if (_domain.ContainsNode(node))
+            if (_domain.ContainsCellCoordinates(node))
             {
                 base.AddNode(node);
             }
@@ -60,19 +55,17 @@ namespace OsipLIB.Graphs
             }
         }
 
-
         public override void AddEdge(Vector2Int node, Vector2Int outNode)
         {
-            if (_domain.ContainsNode(node) && _domain.ContainsNode(outNode))
+            if (_domain.ContainsCellCoordinates(node) && _domain.ContainsCellCoordinates(outNode))
             {
                 base.AddEdge(node, outNode);
             }
             else
             {
-                throw new Exception("Node is out of domain");
+                throw new Exception($"Edge [{node} -> {outNode}] is out of domain");
             }
         }
-
 
         public SymbolicImageGraph Splitted()
         {
@@ -81,9 +74,8 @@ namespace OsipLIB.Graphs
             SymbolicImageGraph splittedGraph = new SymbolicImageGraph();
             splittedGraph._f = _f;
             splittedGraph._domain = splittedDomain;
-            
 
-            foreach (var node in _graph.Keys)
+            foreach (var node in GraphDictionary.Keys)
             {
                 Vector2Int[] subNodes = _domain.GetSubNodes(node);
                 foreach (var subNode in subNodes)
@@ -91,18 +83,14 @@ namespace OsipLIB.Graphs
                     Cell subCell = splittedDomain.GetCell(subNode);
 
                     Vector2[] imagePoints = _f.ApplyToArea(subCell);
-                    //imagePoints = splittedDomain.Filter(imagePoints);
 
                     foreach (var imagePoint in imagePoints)
                     {
-                        if (_domain.ContainsPoint(imagePoint))
+                        if (IsPointInSymbolicImage(imagePoint))
                         {
-                            Vector2Int nodeBefore = _domain.GetNode(imagePoint);
-
-                            if (_graph.TryGetValue(nodeBefore, out var value))
+                            if (splittedDomain.TryGetCellCoordinates(imagePoint, out Vector2Int outCoordinates))
                             {
-                                Vector2Int outNode = splittedDomain.GetNode(imagePoint);
-                                splittedGraph.AddEdge(subNode, outNode);
+                                splittedGraph.AddEdge(subNode, outCoordinates);
                             }
                         }
                     }
@@ -110,6 +98,17 @@ namespace OsipLIB.Graphs
             }
 
             return splittedGraph;
-        } 
+        }
+
+        public List<Cell> GetCells()
+        {
+            return GraphDictionary.Keys.Select(node => _domain.GetCell(node)).ToList();
+        }
+
+        private bool IsPointInSymbolicImage(Vector2 point)
+        {
+            return _domain.TryGetCellCoordinates(point, out Vector2Int sourceCoordinates) &&
+                    GraphDictionary.TryGetValue(sourceCoordinates, out var _);
+        }
     }
 }

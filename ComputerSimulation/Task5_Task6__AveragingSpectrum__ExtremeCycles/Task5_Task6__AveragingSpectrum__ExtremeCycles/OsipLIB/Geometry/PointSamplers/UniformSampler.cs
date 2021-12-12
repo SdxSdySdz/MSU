@@ -1,37 +1,30 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using OsipLIB.LinearAlgebra;
 
 namespace OsipLIB.Geometry.PointSamplers
 {
-    class UniformSampler : PointSampler
+    public class UniformSampler : PointSampler
     {
         private int _rowCount;
         private int _columnCount;
         private double _offsetPercent;
-        
 
         public UniformSampler(int rowCount, int columnCount, double offsetPercent)
         {
             if (rowCount < 1 || columnCount < 1)
             {
                 throw new Exception("Row count and column count should be > 0");
-            } 
+            }
 
             if (offsetPercent < 0 || offsetPercent > 0.5)
             {
                 throw new Exception("Offset percent should be between 0 and 0.5");
             }
 
-
             _rowCount = rowCount;
             _columnCount = columnCount;
             _offsetPercent = offsetPercent;
         }
-
 
         public override Vector2[] Sample(Cell cell)
         {

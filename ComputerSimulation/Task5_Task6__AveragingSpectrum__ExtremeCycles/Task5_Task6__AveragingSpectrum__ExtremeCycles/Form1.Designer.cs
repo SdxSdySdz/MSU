@@ -32,27 +32,29 @@ namespace Task5_Task6__AveragingSpectrum__ExtremeCycles
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.Canvas = new System.Windows.Forms.Panel();
             this.InterfaceHolder = new System.Windows.Forms.Panel();
-            this.MappingTitle = new System.Windows.Forms.Label();
-            this.MappingImage = new System.Windows.Forms.PictureBox();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.BInput = new System.Windows.Forms.TextBox();
-            this.ALabel = new System.Windows.Forms.Label();
-            this.BLabel = new System.Windows.Forms.Label();
-            this.AInput = new System.Windows.Forms.TextBox();
-            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-            this.label2 = new System.Windows.Forms.Label();
-            this.TimeTextBox = new System.Windows.Forms.TextBox();
-            this.CalculationButton = new System.Windows.Forms.Button();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.NodesCountTextBox = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.IterationCountLabel = new System.Windows.Forms.Label();
             this.IterationCountInput = new System.Windows.Forms.TextBox();
+            this.CalculationButton = new System.Windows.Forms.Button();
+            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.label2 = new System.Windows.Forms.Label();
+            this.TimeTextBox = new System.Windows.Forms.TextBox();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.BInput = new System.Windows.Forms.TextBox();
+            this.ALabel = new System.Windows.Forms.Label();
+            this.BLabel = new System.Windows.Forms.Label();
+            this.AInput = new System.Windows.Forms.TextBox();
+            this.MappingImage = new System.Windows.Forms.PictureBox();
+            this.MappingTitle = new System.Windows.Forms.Label();
+            this.SpectrumTextBox = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.InterfaceHolder.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.MappingImage)).BeginInit();
-            this.tableLayoutPanel1.SuspendLayout();
-            this.tableLayoutPanel3.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
+            this.tableLayoutPanel3.SuspendLayout();
+            this.tableLayoutPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.MappingImage)).BeginInit();
             this.SuspendLayout();
             // 
             // Canvas
@@ -66,6 +68,8 @@ namespace Task5_Task6__AveragingSpectrum__ExtremeCycles
             // 
             // InterfaceHolder
             // 
+            this.InterfaceHolder.Controls.Add(this.label1);
+            this.InterfaceHolder.Controls.Add(this.SpectrumTextBox);
             this.InterfaceHolder.Controls.Add(this.tableLayoutPanel2);
             this.InterfaceHolder.Controls.Add(this.CalculationButton);
             this.InterfaceHolder.Controls.Add(this.tableLayoutPanel3);
@@ -77,141 +81,6 @@ namespace Task5_Task6__AveragingSpectrum__ExtremeCycles
             this.InterfaceHolder.Name = "InterfaceHolder";
             this.InterfaceHolder.Size = new System.Drawing.Size(419, 961);
             this.InterfaceHolder.TabIndex = 1;
-            // 
-            // MappingTitle
-            // 
-            this.MappingTitle.Dock = System.Windows.Forms.DockStyle.Top;
-            this.MappingTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.MappingTitle.Location = new System.Drawing.Point(0, 0);
-            this.MappingTitle.Name = "MappingTitle";
-            this.MappingTitle.Size = new System.Drawing.Size(419, 43);
-            this.MappingTitle.TabIndex = 2;
-            this.MappingTitle.Text = "Quadratic Mapping";
-            this.MappingTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // MappingImage
-            // 
-            this.MappingImage.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("MappingImage.BackgroundImage")));
-            this.MappingImage.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.MappingImage.Cursor = System.Windows.Forms.Cursors.Default;
-            this.MappingImage.Dock = System.Windows.Forms.DockStyle.Top;
-            this.MappingImage.InitialImage = null;
-            this.MappingImage.Location = new System.Drawing.Point(0, 43);
-            this.MappingImage.Name = "MappingImage";
-            this.MappingImage.Size = new System.Drawing.Size(419, 65);
-            this.MappingImage.TabIndex = 3;
-            this.MappingImage.TabStop = false;
-            // 
-            // tableLayoutPanel1
-            // 
-            this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 19.68504F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 80.31496F));
-            this.tableLayoutPanel1.Controls.Add(this.BInput, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(this.ALabel, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.BLabel, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.AInput, 1, 0);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 108);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 2;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(419, 100);
-            this.tableLayoutPanel1.TabIndex = 4;
-            // 
-            // BInput
-            // 
-            this.BInput.Dock = System.Windows.Forms.DockStyle.Top;
-            this.BInput.Location = new System.Drawing.Point(85, 65);
-            this.BInput.Margin = new System.Windows.Forms.Padding(3, 15, 3, 3);
-            this.BInput.Name = "BInput";
-            this.BInput.Size = new System.Drawing.Size(331, 20);
-            this.BInput.TabIndex = 3;
-            this.BInput.Text = "10";
-            this.BInput.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // ALabel
-            // 
-            this.ALabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ALabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.ALabel.Location = new System.Drawing.Point(3, 0);
-            this.ALabel.Name = "ALabel";
-            this.ALabel.Size = new System.Drawing.Size(76, 50);
-            this.ALabel.TabIndex = 0;
-            this.ALabel.Text = "a";
-            this.ALabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // BLabel
-            // 
-            this.BLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.BLabel.Location = new System.Drawing.Point(3, 50);
-            this.BLabel.Name = "BLabel";
-            this.BLabel.Size = new System.Drawing.Size(76, 50);
-            this.BLabel.TabIndex = 1;
-            this.BLabel.Text = "b";
-            this.BLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // AInput
-            // 
-            this.AInput.Dock = System.Windows.Forms.DockStyle.Top;
-            this.AInput.Location = new System.Drawing.Point(85, 15);
-            this.AInput.Margin = new System.Windows.Forms.Padding(3, 15, 3, 3);
-            this.AInput.Name = "AInput";
-            this.AInput.Size = new System.Drawing.Size(331, 20);
-            this.AInput.TabIndex = 2;
-            this.AInput.Text = ".6";
-            this.AInput.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // tableLayoutPanel3
-            // 
-            this.tableLayoutPanel3.ColumnCount = 2;
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 26.37795F));
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 73.62205F));
-            this.tableLayoutPanel3.Controls.Add(this.label2, 0, 0);
-            this.tableLayoutPanel3.Controls.Add(this.TimeTextBox, 1, 0);
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 460);
-            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-            this.tableLayoutPanel3.RowCount = 1;
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(413, 40);
-            this.tableLayoutPanel3.TabIndex = 7;
-            // 
-            // label2
-            // 
-            this.label2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label2.Location = new System.Drawing.Point(3, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(102, 40);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "Time";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // TimeTextBox
-            // 
-            this.TimeTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TimeTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.TimeTextBox.Location = new System.Drawing.Point(111, 5);
-            this.TimeTextBox.Margin = new System.Windows.Forms.Padding(3, 5, 3, 3);
-            this.TimeTextBox.Name = "TimeTextBox";
-            this.TimeTextBox.Size = new System.Drawing.Size(299, 30);
-            this.TimeTextBox.TabIndex = 3;
-            // 
-            // CalculationButton
-            // 
-            this.CalculationButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.CalculationButton.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.CalculationButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.CalculationButton.Location = new System.Drawing.Point(0, 919);
-            this.CalculationButton.Name = "CalculationButton";
-            this.CalculationButton.Size = new System.Drawing.Size(419, 42);
-            this.CalculationButton.TabIndex = 8;
-            this.CalculationButton.Text = "Calculate";
-            this.CalculationButton.UseVisualStyleBackColor = false;
-            this.CalculationButton.Click += new System.EventHandler(this.CalculationButton_Click);
             // 
             // tableLayoutPanel2
             // 
@@ -274,6 +143,159 @@ namespace Task5_Task6__AveragingSpectrum__ExtremeCycles
             this.IterationCountInput.TabIndex = 1;
             this.IterationCountInput.Text = "1";
             // 
+            // CalculationButton
+            // 
+            this.CalculationButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.CalculationButton.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.CalculationButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.CalculationButton.Location = new System.Drawing.Point(0, 919);
+            this.CalculationButton.Name = "CalculationButton";
+            this.CalculationButton.Size = new System.Drawing.Size(419, 42);
+            this.CalculationButton.TabIndex = 8;
+            this.CalculationButton.Text = "Calculate";
+            this.CalculationButton.UseVisualStyleBackColor = false;
+            this.CalculationButton.Click += new System.EventHandler(this.CalculationButton_Click);
+            // 
+            // tableLayoutPanel3
+            // 
+            this.tableLayoutPanel3.ColumnCount = 2;
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 26.37795F));
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 73.62205F));
+            this.tableLayoutPanel3.Controls.Add(this.label2, 0, 0);
+            this.tableLayoutPanel3.Controls.Add(this.TimeTextBox, 1, 0);
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(6, 754);
+            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
+            this.tableLayoutPanel3.RowCount = 1;
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(413, 40);
+            this.tableLayoutPanel3.TabIndex = 7;
+            // 
+            // label2
+            // 
+            this.label2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label2.Location = new System.Drawing.Point(3, 0);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(102, 40);
+            this.label2.TabIndex = 2;
+            this.label2.Text = "Time";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // TimeTextBox
+            // 
+            this.TimeTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TimeTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.TimeTextBox.Location = new System.Drawing.Point(111, 5);
+            this.TimeTextBox.Margin = new System.Windows.Forms.Padding(3, 5, 3, 3);
+            this.TimeTextBox.Name = "TimeTextBox";
+            this.TimeTextBox.Size = new System.Drawing.Size(299, 30);
+            this.TimeTextBox.TabIndex = 3;
+            // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.ColumnCount = 2;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 19.68504F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 80.31496F));
+            this.tableLayoutPanel1.Controls.Add(this.BInput, 1, 1);
+            this.tableLayoutPanel1.Controls.Add(this.ALabel, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.BLabel, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.AInput, 1, 0);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 160);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 2;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(419, 100);
+            this.tableLayoutPanel1.TabIndex = 4;
+            // 
+            // BInput
+            // 
+            this.BInput.Dock = System.Windows.Forms.DockStyle.Top;
+            this.BInput.Location = new System.Drawing.Point(85, 65);
+            this.BInput.Margin = new System.Windows.Forms.Padding(3, 15, 3, 3);
+            this.BInput.Name = "BInput";
+            this.BInput.Size = new System.Drawing.Size(331, 20);
+            this.BInput.TabIndex = 3;
+            this.BInput.Text = "1.2";
+            this.BInput.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // ALabel
+            // 
+            this.ALabel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ALabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.ALabel.Location = new System.Drawing.Point(3, 0);
+            this.ALabel.Name = "ALabel";
+            this.ALabel.Size = new System.Drawing.Size(76, 50);
+            this.ALabel.TabIndex = 0;
+            this.ALabel.Text = "a";
+            this.ALabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // BLabel
+            // 
+            this.BLabel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.BLabel.Location = new System.Drawing.Point(3, 50);
+            this.BLabel.Name = "BLabel";
+            this.BLabel.Size = new System.Drawing.Size(76, 50);
+            this.BLabel.TabIndex = 1;
+            this.BLabel.Text = "b";
+            this.BLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // AInput
+            // 
+            this.AInput.Dock = System.Windows.Forms.DockStyle.Top;
+            this.AInput.Location = new System.Drawing.Point(85, 15);
+            this.AInput.Margin = new System.Windows.Forms.Padding(3, 15, 3, 3);
+            this.AInput.Name = "AInput";
+            this.AInput.Size = new System.Drawing.Size(331, 20);
+            this.AInput.TabIndex = 2;
+            this.AInput.Text = "-0.9";
+            this.AInput.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // MappingImage
+            // 
+            this.MappingImage.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("MappingImage.BackgroundImage")));
+            this.MappingImage.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.MappingImage.Cursor = System.Windows.Forms.Cursors.Default;
+            this.MappingImage.Dock = System.Windows.Forms.DockStyle.Top;
+            this.MappingImage.InitialImage = null;
+            this.MappingImage.Location = new System.Drawing.Point(0, 43);
+            this.MappingImage.Name = "MappingImage";
+            this.MappingImage.Size = new System.Drawing.Size(419, 117);
+            this.MappingImage.TabIndex = 3;
+            this.MappingImage.TabStop = false;
+            // 
+            // MappingTitle
+            // 
+            this.MappingTitle.Dock = System.Windows.Forms.DockStyle.Top;
+            this.MappingTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.MappingTitle.Location = new System.Drawing.Point(0, 0);
+            this.MappingTitle.Name = "MappingTitle";
+            this.MappingTitle.Size = new System.Drawing.Size(419, 43);
+            this.MappingTitle.TabIndex = 2;
+            this.MappingTitle.Text = "Quadratic Mapping";
+            this.MappingTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // SpectrumTextBox
+            // 
+            this.SpectrumTextBox.Location = new System.Drawing.Point(14, 344);
+            this.SpectrumTextBox.Multiline = true;
+            this.SpectrumTextBox.Name = "SpectrumTextBox";
+            this.SpectrumTextBox.Size = new System.Drawing.Size(393, 389);
+            this.SpectrumTextBox.TabIndex = 10;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label1.Location = new System.Drawing.Point(147, 310);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(130, 31);
+            this.label1.TabIndex = 11;
+            this.label1.Text = "Spectrum";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -285,13 +307,14 @@ namespace Task5_Task6__AveragingSpectrum__ExtremeCycles
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "MainForm";
             this.InterfaceHolder.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.MappingImage)).EndInit();
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
-            this.tableLayoutPanel3.ResumeLayout(false);
-            this.tableLayoutPanel3.PerformLayout();
+            this.InterfaceHolder.PerformLayout();
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
+            this.tableLayoutPanel3.ResumeLayout(false);
+            this.tableLayoutPanel3.PerformLayout();
+            this.tableLayoutPanel1.ResumeLayout(false);
+            this.tableLayoutPanel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.MappingImage)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -316,6 +339,8 @@ namespace Task5_Task6__AveragingSpectrum__ExtremeCycles
         private System.Windows.Forms.Label BLabel;
         private System.Windows.Forms.TextBox AInput;
         private System.Windows.Forms.PictureBox MappingImage;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox SpectrumTextBox;
     }
 }
 

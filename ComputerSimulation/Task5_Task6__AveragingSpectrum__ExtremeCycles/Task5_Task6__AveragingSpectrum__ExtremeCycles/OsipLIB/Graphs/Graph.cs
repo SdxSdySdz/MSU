@@ -1,29 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using OsipLIB.LinearAlgebra;
-using OsipLIB.Graphs;
 
 namespace OsipLIB.Graphs
 {
-    public class Graph
+    public class Graph<TNode> where TNode : INode
     {
-        protected Dictionary<Vector2Int, HashSet<Vector2Int>> _graph;
+        public Dictionary<TNode, HashSet<TNode>> GraphDictionary;
 
+        public Graph()
+        {
+            GraphDictionary = new Dictionary<TNode, HashSet<TNode>>();
+        }
 
-        public int NodesCount => _graph.Keys.Count;
-        public Vector2Int[] Nodes
+        public Graph(Dictionary<TNode, HashSet<TNode>> graph) : this()
+        {
+            foreach (var item in graph)
+            {
+                GraphDictionary[item.Key] = new HashSet<TNode>(item.Value);
+            }
+        }
+
+        public int NodesCount => GraphDictionary.Keys.Count;
+
+        public TNode[] Nodes
         {
             get
             {
-                Vector2Int[] nodes = new Vector2Int[_graph.Count];
+                TNode[] nodes = new TNode[GraphDictionary.Count];
 
                 int count = 0;
-                foreach (var node in _graph.Keys)
+                foreach (var node in GraphDictionary.Keys)
                 {
-                    nodes[count] = new Vector2Int(node);
+                    nodes[count] = node;
                     count++;
                 }
 
@@ -31,25 +39,27 @@ namespace OsipLIB.Graphs
             }
         }
 
-        public Dictionary<Vector2Int, HashSet<Vector2Int>> TransposedDictionary => GetTransposedDictionary();
-
-        public Graph()
+        public List<(TNode Source, TNode Destination)> Edges
         {
-            _graph = new Dictionary<Vector2Int, HashSet<Vector2Int>>();
-        }
-
-
-        public Graph(Dictionary<Vector2Int, HashSet<Vector2Int>> graph) : this()
-        {
-            foreach (var item in graph)
+            get
             {
-                _graph[item.Key] = new HashSet<Vector2Int>(item.Value);
+                var edges = new List<(TNode Source, TNode Destination)>();
+
+                foreach (var node in GraphDictionary.Keys)
+                {
+                    foreach (var outNode in GraphDictionary[node])
+                    {
+                        edges.Add((node, outNode));
+                    }
+                }
+
+                return edges;
             }
         }
 
+        public Dictionary<TNode, HashSet<TNode>> TransposedDictionary => GetTransposedDictionary();
 
-        public HashSet<Vector2Int> GetOutNodes(Vector2Int node) => new HashSet<Vector2Int>(_graph[node]);
-
+        public HashSet<TNode> GetOutNodes(TNode node) => new HashSet<TNode>(GraphDictionary[node]);
 
         public void DeleteNonReturnableNodes()
         {
@@ -57,33 +67,119 @@ namespace OsipLIB.Graphs
             DeleteNodes(extraNodes);
         }
 
-
-        private List<Vector2Int> GetNonReturnableNodes()
+        public List<List<TNode>> GetStronglyConnectedComponents()
         {
-            List<List<Vector2Int>> stronglyConnectedComponents = GetStronglyConnectedComponents();
-            List<Vector2Int> nonReturnableNodes = new List<Vector2Int>();
 
-            foreach (var component in stronglyConnectedComponents)
+            List<List<TNode>> components = new List<List<TNode>>();
+
+            Dictionary<TNode, bool> used = new Dictionary<TNode, bool>();
+            List<TNode> order = new List<TNode>();
+
+            foreach (var node in GraphDictionary.Keys)
             {
-                if (component.Count == 1)
+                if (used.TryGetValue(node, out var value) == false)
                 {
-                    var node = component[0];
-                    if (_graph[node].Contains(node) == false)
-                    {
-                        nonReturnableNodes.Add(node);
-                    }
+                    DFSWithoutRecursion(node, ref used, ref order);
+                    // DFS(node, ref used, ref order);
                 }
             }
 
-            return nonReturnableNodes;
+            Dictionary<TNode, HashSet<TNode>> graphT = TransposedDictionary;
+            List<TNode> component = new List<TNode>();
+            used.Clear();
+            for (int i = 0; i < order.Count; i++)
+            {
+                TNode node = order[order.Count - 1 - i];
+
+                if (used.TryGetValue(node, out var value) == false)
+                {
+                    TransposedDFSWithoutRecursion(node, ref graphT, ref used, ref component);
+                    // TransposedDFS(node, ref graphT, ref used, ref component);
+                    components.Add(new List<TNode>(component));
+                    component.Clear();
+                }
+            }
+
+            return components;
         }
 
-
-        public List<Vector2Int> ApplyDFS()
+        /*** ADDING ***/
+        public virtual void AddNode(TNode node)
         {
-            List<Vector2Int> result = new List<Vector2Int>();
+            if (GraphDictionary.TryGetValue(node, out HashSet<TNode> outNodes))
+            {
+                outNodes.Add(node);
+            }
+            else
+            {
+                GraphDictionary.Add(node, new HashSet<TNode>());
+            }
+        }
 
-            List<List<Vector2Int>> components = GetStronglyConnectedComponents();
+        public virtual void AddEdge(TNode node, TNode outNode)
+        {
+            if (GraphDictionary.TryGetValue(outNode, out var value) == false)
+            {
+                GraphDictionary.Add(outNode, new HashSet<TNode>());
+            }
+
+            if (GraphDictionary.TryGetValue(node, out HashSet<TNode> outNodes))
+            {
+                outNodes.Add(outNode);
+            }
+            else
+            {
+                GraphDictionary.Add(node, new HashSet<TNode> { outNode });
+            }
+        }
+
+        /*** REMOVING ***/
+        public void DeleteNode(TNode node)
+        {
+            if (ContainsNode(node) == false)
+            {
+                throw new Exception("Can not delete node");
+            }
+
+            GraphDictionary.Remove(node);
+
+            foreach (var outNodes in GraphDictionary.Values)
+            {
+                outNodes.Remove(node);
+            }
+        }
+
+        public void DeleteNodes(IEnumerable<TNode> extraNodes)
+        {
+            foreach (var extraNode in extraNodes)
+            {
+                DeleteNode(extraNode);
+            }
+        }
+
+        public override string ToString()
+        {
+            string graphStr = string.Empty;
+            foreach (var node in GraphDictionary.Keys)
+            {
+                graphStr += $"{node} {{";
+                foreach (var outNode in GraphDictionary[node])
+                {
+                    graphStr += $"{outNode} ";
+                }
+
+                graphStr += "}\n";
+            }
+
+            return graphStr;
+        }
+
+        /*** DFS ***/
+        public List<TNode> ApplyDFS()
+        {
+            List<TNode> result = new List<TNode>();
+
+            List<List<TNode>> components = GetStronglyConnectedComponents();
             foreach (var component in components)
             {
                 foreach (var node in component)
@@ -95,136 +191,21 @@ namespace OsipLIB.Graphs
             return result;
         }
 
-
-        private List<List<Vector2Int>> GetStronglyConnectedComponents()
+        public List<TNode> MakeDeepFirstSearch(TNode node)
         {
-
-            List<List<Vector2Int>> components = new List<List<Vector2Int>>();
-
-            Dictionary<Vector2Int, bool> used = new Dictionary<Vector2Int, bool>();
-            List<Vector2Int> order = new List<Vector2Int>();
-
-            foreach (var node in _graph.Keys)
-            {
-                if (used.TryGetValue(node, out var value) == false)
-                {
-                    DFSWithoutRecursion(node, ref used, ref order);
-                }
-            }
-
-            Dictionary<Vector2Int, HashSet<Vector2Int>> graphT = TransposedDictionary;
-            List<Vector2Int> component = new List<Vector2Int>();
-            used.Clear();
-            for (int i = 0; i < order.Count; i++)
-            {
-                Vector2Int node = order[order.Count - 1 - i];
-
-                if (used.TryGetValue(node, out var value) == false)
-                {
-                    TransposedDFSWithoutRecursion(node, ref graphT, ref used, ref component);
-                    components.Add(new List<Vector2Int>(component));
-                    component.Clear();
-                }
-            }
-
-            return components;
-
-        }
-
-
-        /*** ADDING ***/
-        public virtual void AddNode(Vector2Int node)
-        {
-            if (_graph.TryGetValue(node, out HashSet<Vector2Int> outNodes))
-            {
-                outNodes.Add(node);
-            }
-            else
-            {
-                _graph.Add(node, new HashSet<Vector2Int>());
-            }
-        }
-
-
-        public virtual void AddEdge(Vector2Int node, Vector2Int outNode)
-        {
-            if (_graph.TryGetValue(outNode, out var value) == false)
-            {
-                _graph.Add(outNode, new HashSet<Vector2Int>());
-            }
-
-            if (_graph.TryGetValue(node, out HashSet<Vector2Int> outNodes))
-            {
-                outNodes.Add(outNode);
-            }
-            else
-            {
-                _graph.Add(node, new HashSet<Vector2Int> { outNode });
-            }
-        }
-
-
-        /*** REMOVING ***/
-        public void DeleteNode(Vector2Int node)
-        {
-            if (ContainsNode(node) == false)
-            {
-                throw new Exception("Can not delete node");
-            }
-
-            _graph.Remove(node);
-
-            foreach (var outNodes in _graph.Values)
-            {
-                outNodes.Remove(node);
-            }
-        }
-
-
-        public void DeleteNodes(IEnumerable<Vector2Int> extraNodes)
-        {
-            foreach (var extraNode in extraNodes)
-            {
-                DeleteNode(extraNode);
-            }
-        }
-
-
-        public override string ToString()
-        {
-            string graphStr = "";
-            foreach (var node in _graph.Keys)
-            {
-                graphStr += $"{node} {{";
-                foreach (var outNode in _graph[node])
-                {
-                    graphStr += $"{outNode} ";
-                }
-
-                graphStr += "}\n";
-            }
-
-            return graphStr;
-        }
-
-
-        /*** DFS ***/
-        public List<Vector2Int> MakeDeepFirstSearch(Vector2Int node)
-        {
-            List<Vector2Int> order = new List<Vector2Int>();
-            Dictionary<Vector2Int, bool> used = new Dictionary<Vector2Int, bool>();
+            List<TNode> order = new List<TNode>();
+            Dictionary<TNode, bool> used = new Dictionary<TNode, bool>();
             DFSWithoutRecursion(node, ref used, ref order);
 
             return order;
         }
 
-
-        protected void DFSWithoutRecursion(Vector2Int node, ref Dictionary<Vector2Int, bool> used, ref List<Vector2Int> order)
+        protected void DFSWithoutRecursion(TNode node, ref Dictionary<TNode, bool> used, ref List<TNode> order)
         {
-            Stack<Vector2Int> memory = new Stack<Vector2Int>();
+            Stack<TNode> memory = new Stack<TNode>();
             memory.Push(node);
 
-            Vector2Int currentNode;
+            TNode currentNode;
 
             bool allUsed;
             while (memory.Count > 0)
@@ -233,11 +214,11 @@ namespace OsipLIB.Graphs
                 currentNode = memory.Peek();
                 used[currentNode] = true;
 
-                HashSet<Vector2Int> remainingOutNodes = _graph[currentNode];
+                HashSet<TNode> remainingOutNodes = GraphDictionary[currentNode];
 
                 if (remainingOutNodes.Count > 0)
                 {
-                    foreach (var outNode in new HashSet<Vector2Int>(remainingOutNodes))
+                    foreach (var outNode in new HashSet<TNode>(remainingOutNodes))
                     {
                         if (used.TryGetValue(outNode, out var value) == false)
                         {
@@ -257,32 +238,44 @@ namespace OsipLIB.Graphs
             }
         }
 
-
-        protected void TransposedDFSWithoutRecursion(Vector2Int node, ref Dictionary<Vector2Int, HashSet<Vector2Int>> graphT, ref Dictionary<Vector2Int, bool> used, ref List<Vector2Int> component)
+/*        private void DFS(TNode node, ref Dictionary<TNode, bool> used, ref List<TNode> order)
         {
-            Stack<Vector2Int> memory = new Stack<Vector2Int>();
+            used[node] = true;
+            foreach (var outNode in GraphDictionary[node])
+            {
+                if (used.TryGetValue(outNode, out bool _) == false)
+                // if (used[outNode] == false)
+                {
+                    DFS(outNode, ref used, ref order);
+                }
+            }
+
+            order.Add(node);
+        }*/
+
+        protected void TransposedDFSWithoutRecursion(
+            TNode node,
+            ref Dictionary<TNode, HashSet<TNode>> graphT,
+            ref Dictionary<TNode, bool> used,
+            ref List<TNode> component)
+        {
+            Stack<TNode> memory = new Stack<TNode>();
             memory.Push(node);
 
-            Vector2Int currentNode;
+            TNode currentNode;
             bool allUsed;
             while (memory.Count > 0)
             {
                 allUsed = true;
                 currentNode = memory.Peek();
 
-
-
-                // component.Add(currentNode);
-
                 if (used.TryGetValue(currentNode, out var _) == false)
                 {
                     component.Add(currentNode);
                     used[currentNode] = true;
                 }
-                
-                
 
-                HashSet<Vector2Int> remainingOutNodes = graphT[currentNode];
+                HashSet<TNode> remainingOutNodes = graphT[currentNode];
 
                 if (remainingOutNodes.Count > 0)
                 {
@@ -297,7 +290,6 @@ namespace OsipLIB.Graphs
                     }
                 }
 
-
                 if (allUsed)
                 {
                     memory.Pop();
@@ -305,39 +297,69 @@ namespace OsipLIB.Graphs
             }
         }
 
+/*        private void TransposedDFS(TNode node,
+            ref Dictionary<TNode, HashSet<TNode>> graphT,
+            ref Dictionary<TNode, bool> used,
+            ref List<TNode> component)
+        {
+            used[node] = true;
+            component.Add(node);
+            foreach (var outNode in graphT[node])
+            {
+                if (used.TryGetValue(outNode, out var _) == false)
+                    TransposedDFS(outNode, ref graphT, ref used, ref component);
+            } 
+        }*/
 
         /*** ***/
-        private Dictionary<Vector2Int, HashSet<Vector2Int>> GetTransposedDictionary()
+        private List<TNode> GetNonReturnableNodes()
         {
+            List<List<TNode>> stronglyConnectedComponents = GetStronglyConnectedComponents();
+            List<TNode> nonReturnableNodes = new List<TNode>();
 
-            var graphT = new Dictionary<Vector2Int, HashSet<Vector2Int>>();
+            foreach (var component in stronglyConnectedComponents)
+            {
+                if (component.Count == 1)
+                {
+                    var node = component[0];
+                    if (GraphDictionary[node].Contains(node) == false)
+                    {
+                        nonReturnableNodes.Add(node);
+                    }
+                }
+            }
 
-            foreach (Vector2Int node in _graph.Keys)
+            return nonReturnableNodes;
+        }
+
+        private Dictionary<TNode, HashSet<TNode>> GetTransposedDictionary()
+        {
+            var graphT = new Dictionary<TNode, HashSet<TNode>>();
+
+            foreach (TNode node in GraphDictionary.Keys)
             {
                 if (graphT.TryGetValue(node, out var value) == false)
                 {
-                    graphT[node] = new HashSet<Vector2Int>();
+                    graphT[node] = new HashSet<TNode>();
                 }
 
-                var outNodes = _graph[node];
+                var outNodes = GraphDictionary[node];
 
                 if (outNodes.Count == 0)
                 {
-                    graphT[node] = new HashSet<Vector2Int>();
+                    graphT[node] = new HashSet<TNode>();
                     continue;
                 }
 
-                foreach (Vector2Int outNode in outNodes)
+                foreach (TNode outNode in outNodes)
                 {
-
                     if (graphT.TryGetValue(outNode, out var outOutNodes))
                     {
                         outOutNodes.Add(node);
-
                     }
                     else
                     {
-                        graphT.Add(outNode, new HashSet<Vector2Int> { node });
+                        graphT.Add(outNode, new HashSet<TNode> { node });
                     }
                 }
             }
@@ -345,10 +367,9 @@ namespace OsipLIB.Graphs
             return graphT;
         }
 
-
-        private bool ContainsNode(Vector2Int node)
+        private bool ContainsNode(TNode node)
         {
-            return _graph.TryGetValue(node, out var value);
+            return GraphDictionary.TryGetValue(node, out var value);
         }
     }
 }
