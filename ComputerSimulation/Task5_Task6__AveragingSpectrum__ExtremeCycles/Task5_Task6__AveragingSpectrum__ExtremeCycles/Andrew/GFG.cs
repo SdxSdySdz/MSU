@@ -69,8 +69,7 @@ namespace Task5_Task6__AveragingSpectrum__ExtremeCycles.Andrew
         public HashSet<int> Min_ver { get => min_ver; set => min_ver = value; }
         public HashSet<int> Max_ver { get => max_ver; set => max_ver = value; }
 
-        void addedge(int u,
-                            int v, float w)
+        void addedge(int u, int v, float w)
         {
             edges[v].Add(new Edge(u, w));
         }

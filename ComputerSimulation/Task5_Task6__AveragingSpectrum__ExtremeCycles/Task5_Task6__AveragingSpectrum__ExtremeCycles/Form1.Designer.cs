@@ -275,7 +275,7 @@ namespace Task5_Task6__AveragingSpectrum__ExtremeCycles
             this.MappingTitle.Name = "MappingTitle";
             this.MappingTitle.Size = new System.Drawing.Size(419, 43);
             this.MappingTitle.TabIndex = 2;
-            this.MappingTitle.Text = "Quadratic Mapping";
+            this.MappingTitle.Text = "Ikeda Mapping";
             this.MappingTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // SpectrumTextBox

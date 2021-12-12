@@ -305,9 +305,17 @@ namespace Task5_Task6__AveragingSpectrum__ExtremeCycles
         private void DrawGFG(Graphics graphics, GFG gfg)
         {
             HashSet<int> minCycleNumbers = gfg.Min_ver;
-            HashSet<int> maxCycleNumbers = gfg.Min_ver;
+            HashSet<int> maxCycleNumbers = gfg.Max_ver;
 
             foreach (var nodeNumber in minCycleNumbers)
+            {
+                var node = _nodesNumeration.First(item => item.Value == nodeNumber).Key;
+                Cell cell = _graph.Domain.GetCell(node);
+                Brush brush = Brushes.Blue;
+                DrawCell(graphics, cell, brush);
+            }
+
+            foreach (var nodeNumber in maxCycleNumbers)
             {
                 var node = _nodesNumeration.First(item => item.Value == nodeNumber).Key;
                 Cell cell = _graph.Domain.GetCell(node);
