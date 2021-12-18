@@ -1,0 +1,10 @@
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task8_MorseSpectrum\Task8_MorseSpectrum\bin\Debug\Task8_MorseSpectrum.exe.config
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task8_MorseSpectrum\Task8_MorseSpectrum\bin\Debug\Task8_MorseSpectrum.exe
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task8_MorseSpectrum\Task8_MorseSpectrum\bin\Debug\Task8_MorseSpectrum.pdb
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task8_MorseSpectrum\Task8_MorseSpectrum\obj\Debug\Task8_MorseSpectrum.csproj.AssemblyReference.cache
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task8_MorseSpectrum\Task8_MorseSpectrum\obj\Debug\Task8_MorseSpectrum.Properties.Resources.resources
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task8_MorseSpectrum\Task8_MorseSpectrum\obj\Debug\Task8_MorseSpectrum.csproj.GenerateResource.cache
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task8_MorseSpectrum\Task8_MorseSpectrum\obj\Debug\Task8_MorseSpectrum.csproj.CoreCompileInputs.cache
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task8_MorseSpectrum\Task8_MorseSpectrum\obj\Debug\Task8_MorseSpectrum.exe
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task8_MorseSpectrum\Task8_MorseSpectrum\obj\Debug\Task8_MorseSpectrum.pdb
+D:\Progs\MSU_git\MSU\ComputerSimulation\Task8_MorseSpectrum\Task8_MorseSpectrum\obj\Debug\Task8_MorseSpectrum.MainForm.resources
