@@ -32,6 +32,8 @@ namespace Task5_Task6__AveragingSpectrum__ExtremeCycles
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.Canvas = new System.Windows.Forms.Panel();
             this.InterfaceHolder = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.SpectrumTextBox = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.NodesCountTextBox = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -48,8 +50,6 @@ namespace Task5_Task6__AveragingSpectrum__ExtremeCycles
             this.AInput = new System.Windows.Forms.TextBox();
             this.MappingImage = new System.Windows.Forms.PictureBox();
             this.MappingTitle = new System.Windows.Forms.Label();
-            this.SpectrumTextBox = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
             this.InterfaceHolder.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
@@ -81,6 +81,24 @@ namespace Task5_Task6__AveragingSpectrum__ExtremeCycles
             this.InterfaceHolder.Name = "InterfaceHolder";
             this.InterfaceHolder.Size = new System.Drawing.Size(419, 961);
             this.InterfaceHolder.TabIndex = 1;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label1.Location = new System.Drawing.Point(147, 310);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(130, 31);
+            this.label1.TabIndex = 11;
+            this.label1.Text = "Spectrum";
+            // 
+            // SpectrumTextBox
+            // 
+            this.SpectrumTextBox.Location = new System.Drawing.Point(14, 344);
+            this.SpectrumTextBox.Multiline = true;
+            this.SpectrumTextBox.Name = "SpectrumTextBox";
+            this.SpectrumTextBox.Size = new System.Drawing.Size(393, 389);
+            this.SpectrumTextBox.TabIndex = 10;
             // 
             // tableLayoutPanel2
             // 
@@ -277,24 +295,6 @@ namespace Task5_Task6__AveragingSpectrum__ExtremeCycles
             this.MappingTitle.TabIndex = 2;
             this.MappingTitle.Text = "Ikeda Mapping";
             this.MappingTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // SpectrumTextBox
-            // 
-            this.SpectrumTextBox.Location = new System.Drawing.Point(14, 344);
-            this.SpectrumTextBox.Multiline = true;
-            this.SpectrumTextBox.Name = "SpectrumTextBox";
-            this.SpectrumTextBox.Size = new System.Drawing.Size(393, 389);
-            this.SpectrumTextBox.TabIndex = 10;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label1.Location = new System.Drawing.Point(147, 310);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(130, 31);
-            this.label1.TabIndex = 11;
-            this.label1.Text = "Spectrum";
             // 
             // MainForm
             // 

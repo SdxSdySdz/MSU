@@ -348,7 +348,7 @@ namespace Task5_Task6__AveragingSpectrum__ExtremeCycles
             {
                 if (component.Count == 1) continue;
 
-                    Brush brush = brushes[brushNumber];
+                Brush brush = brushes[brushNumber];
                 foreach (var node in component)
                 {
                     Cell cell = _domain.GetCell(node);

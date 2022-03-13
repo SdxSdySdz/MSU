@@ -1,4 +1,6 @@
-﻿using OsipLIB.Graphs;
+﻿using OsipLIB.Geometry;
+using OsipLIB.Graphs;
+using OsipLIB.LinearAlgebra;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -62,6 +64,8 @@ namespace Task8_MorseSpectrum
 
         private void Calculate(int maxIterationCount, int maxProjectiveIterationCount, double a, double b)
         {
+            Domain domain = new Domain(new Vector2(-2.5, -2.5), new Vector2(2.5, 2.5), 10, 10);
+
             var spectrum = GetSpectrum(maxIterationCount, maxProjectiveIterationCount);
 
             List<string> lines = spectrum.Select(spec => $"<{spec.Item1}  {spec.Item2}>").ToList();
@@ -163,12 +167,12 @@ namespace Task8_MorseSpectrum
                 }
                 else
                 {
-                    seconds = (int)(250 + (maxProjectiveIterationCount / 4.0) * 49);
+                    seconds = (int)(250 + (maxProjectiveIterationCount / 4.0) * 20);
                 }
             }
             else
             {
-                seconds = (int)(230 + (maxProjectiveIterationCount / 4.0) * 69);
+                seconds = (int)(30 + (maxProjectiveIterationCount / 4.0) * 100);
             }
 
             return seconds;
@@ -192,5 +196,10 @@ namespace Task8_MorseSpectrum
         {
             TryCalculate();
         }
+
+/*        private int SegmentsCount(int maxProjectiveIterationCount)
+        {
+
+        }*/
     }
 }
